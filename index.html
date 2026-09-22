@@ -328,26 +328,35 @@ function loadSpecificDateFromDrive() {
         }
       }
     })
-    .catch(err => alert("Dieses Datum konnte nicht geladen werden."));
+ .catch(err => alert("Dieses Datum konnte nicht geladen werden."));
 }
 
+// ==========================================
+// START-ABLAUF DER APP BEIM LADEN
+// ==========================================
+if (Object.keys(appData.drinks).length === 0) appData.drinks = { "Bier": 2.50, "Cola": 2.00, "Wasser": 1.50 };
+let rawText = "";
+for (let [name, price] of Object.entries(appData.drinks)) { 
+  rawText += name + '=' + Number(price).toFixed(2) + '\n'; 
+}
+if(document.getElementById('config-drinks-raw')) document.getElementById('config-drinks-raw').value = rawText.trim();
+if(appData.fineU40 !== undefined && document.getElementById('config-fine-u40')) document.getElementById('config-fine-u40').value = appData.fineU40.toFixed(2);
+if(appData.fineVorbei !== undefined && document.getElementById('config-fine-vorbei')) document.getElementById('config-fine-vorbei').value = appData.fineVorbei.toFixed(2);
 
+const savedTimestamp = localStorage.getItem('dart_app_json_time');
+if (savedTimestamp) {
+  const tsBox = document.getElementById('backup-timestamp-box');
+  if(tsBox) {
+    tsBox.innerText = " Zuletzt geladener Stand vom: " + savedTimestamp;
+    tsBox.style.display = "block";
+  }
+}
 
+// Start-Funktionen ausführen
+loadFromLocalStorage();
+loadLatestFromGoogleDrive();
+switchTab('tab-dashboard');
 
- if (Object.keys(appData.drinks).length === 0) appData.drinks = { "Bier": 2.50, "Cola": 2.00, "Wasser": 1.50 };
- let rawText = "";
- for (let [name, price] of Object.entries(appData.drinks)) { rawText += name + '=' + Number(price).toFixed(2) + '\n'; }
- document.getElementById('config-drinks-raw').value = rawText.trim();
- if(appData.fineU40 !== undefined) document.getElementById('config-fine-u40').value = appData.fineU40.toFixed(2);
- if(appData.fineVorbei !== undefined) document.getElementById('config-fine-vorbei').value = appData.fineVorbei.toFixed(2);
- 
- const savedTimestamp = localStorage.getItem('dart_app_json_time');
- if (savedTimestamp) {
-   const tsBox = document.getElementById('backup-timestamp-box');
-   tsBox.innerText = "ℹ️ Zuletzt geladener Stand vom: " + savedTimestamp;
-   tsBox.style.display = "block";
- }
- switchTab('tab-dashboard');
 });
 
 function saveToLocalStorage() { localStorage.setItem('dart_app_data', JSON.stringify(appData)); }
