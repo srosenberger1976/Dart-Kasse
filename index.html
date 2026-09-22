@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
-
- 
- 
- 
- 
- 
- <head>
+<head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Dart Kasse</title>
@@ -105,28 +99,7 @@
  .btn-top { flex: 1; min-width: 120px; font-size: 0.85rem !important; padding: 8px 5px !important; margin: 0 !important; white-space: nowrap; }
  .info-box { background: #d1ecf1; border-left: 5px solid #0c5460; color: #0c5460; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
  </style>
-
- 
- <!-- Verbindung zum App-Manifest -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
-<!-- Registrierung des Hintergrund-Service-Workers -->
-<script>
-if ('serviceWorker' in navigator) {
-window.addEventListener('load', () => {
-navigator.serviceWorker.register('./sw.js')
-.then(reg => console.log('App-Modus bereit!'))
-.catch(err => console.error('Fehler:', err));
-});
-}
-</script>
- 
- 
- 
- 
- 
- 
- </head>
+</head>
 <body>
 <header> DC High Flyer 1 und 2 / Dart-Kasse 2026 </header> 🎯
 <div class="nav-bar">
@@ -139,35 +112,16 @@ navigator.serviceWorker.register('./sw.js')
  <div id="backup-timestamp-box" class="info-box" style="display: none;"></div>
  <div class="card">
  <h3>Finanzen Übersicht</h3>
- 
-
-
-<div id="finance-card-content">
+ <div id="finance-card-content">
    <p> <b>Dartkasse Gesamt:</b> <span id="stats-dartkasse">0.00</span> € 💰</p>
    <p> <b>Kasse Sportlerheim:</b> <span id="stats-heim">0.00</span> € </p> 🍻
    <button class="blue" style="margin-top:10px;" onclick="printAllFinances()"> Gesamtbericht drucken (PDF) 🖨</button>
  </div>
  </div>
-
- <!-- 🔽 HIER GENAU FÜGST DU DEN NEUEN KASTEN EIN 🔽 -->
- <div class="card" style="margin-top:10px; background:#e9ecef; color:#212529;">
-   <h4>📅 Älteren Kassenstand aufrufen</h4>
-   <input type="date" id="historie-datum-auswahl" onchange="loadSpecificDateFromDrive()">
-   <button class="secondary" onclick="loadLatestFromGoogleDrive()" style="margin-top:5px; background:#6c757d;">Zurück zum aktuellen Stand 🔄</button>
- </div>
- <!-- 🔼 HIER ENDET DER NEUE KASTEN 🔼 -->
-
  <div class="card">
  <h3>Offene Schulden pro Spieler</h3>
  <div id="dashboard-debts-list">Keine Außenstände.</div>
-
-
-
-
-
-
-
-</div>
+ </div>
  <div class="card">
  <h3>Manuelle Buchung</h3>
  <select id="manual-target"><option value="dart">Dartkasse</option><option value="heim">Sportlerheim Kasse</option></select>
@@ -297,66 +251,22 @@ navigator.serviceWorker.register('./sw.js')
 <script>
 let appData = { players: [], drinks: {}, kassen: { dart: 0.0, heim: 0.0 }, debts: {}, kws: {}, fineU40: 0.20, fineVorbei: 0.30 };
 
-// 1. Hier deine Google-URL eintragen
-const SKRIPT_URL = "https://script.google.com/macros/s/AKfycbxbB49dpdpEI7H-9yNeTN29Ub6uBgixQ_bRIVqTAxz4fMb9lmx9Y3ZosVmBzy69yTTdZg/exec";
-
-// 2. Diese Funktion holt die Daten automatisch aus dem Drive
-function loadSpecificDateFromDrive() {
-  const gewaehltesDatum = document.getElementById('historie-datum-auswahl').value; // Gibt YYYY-MM-DD zurück
-  if (!gewaehltesDatum) return;
-  
-  // Wir hängen das Wunschdatum als Suchbefehl an die Google-URL an
-  const urlMitDatum = SKRIPT_URL + "?datum=" + gewaehltesDatum;
-  
-  fetch(urlMitDatum)
-    .then(res => res.json())
-    .then(daten => {
-      if (daten.error) {
-        alert("Fehler: " + daten.error);
-        return;
-      }
-      if (daten.payload) {
-        appData = daten.payload; 
-        saveToLocalStorage();
-        updateDashboard();
-        
-        // Anzeige aktualisieren, damit du weißt, dass du in der Vergangenheit bist
-        const tsBox = document.getElementById('backup-timestamp-box');
-        if (tsBox) {
-          tsBox.innerText = " ⚠️ ANGEZEIGTER STAND VOM: " + daten.metaDatum + " (Historie!)";
-          tsBox.style.display = "block";
-        }
-      }
-    })
- .catch(err => alert("Dieses Datum konnte nicht geladen werden."));
-}
-
-// ==========================================
-// START-ABLAUF DER APP BEIM LADEN
-// ==========================================
-if (Object.keys(appData.drinks).length === 0) appData.drinks = { "Bier": 2.50, "Cola": 2.00, "Wasser": 1.50 };
-let rawText = "";
-for (let [name, price] of Object.entries(appData.drinks)) { 
-  rawText += name + '=' + Number(price).toFixed(2) + '\n'; 
-}
-if(document.getElementById('config-drinks-raw')) document.getElementById('config-drinks-raw').value = rawText.trim();
-if(appData.fineU40 !== undefined && document.getElementById('config-fine-u40')) document.getElementById('config-fine-u40').value = appData.fineU40.toFixed(2);
-if(appData.fineVorbei !== undefined && document.getElementById('config-fine-vorbei')) document.getElementById('config-fine-vorbei').value = appData.fineVorbei.toFixed(2);
-
-const savedTimestamp = localStorage.getItem('dart_app_json_time');
-if (savedTimestamp) {
-  const tsBox = document.getElementById('backup-timestamp-box');
-  if(tsBox) {
-    tsBox.innerText = " Zuletzt geladener Stand vom: " + savedTimestamp;
-    tsBox.style.display = "block";
-  }
-}
-
-// Start-Funktionen ausführen
-loadFromLocalStorage();
-loadLatestFromGoogleDrive();
-switchTab('tab-dashboard');
-
+document.addEventListener("DOMContentLoaded", () => {
+ loadFromLocalStorage();
+ if (Object.keys(appData.drinks).length === 0) appData.drinks = { "Bier": 2.50, "Cola": 2.00, "Wasser": 1.50 };
+ let rawText = "";
+ for (let [name, price] of Object.entries(appData.drinks)) { rawText += name + '=' + Number(price).toFixed(2) + '\n'; }
+ document.getElementById('config-drinks-raw').value = rawText.trim();
+ if(appData.fineU40 !== undefined) document.getElementById('config-fine-u40').value = appData.fineU40.toFixed(2);
+ if(appData.fineVorbei !== undefined) document.getElementById('config-fine-vorbei').value = appData.fineVorbei.toFixed(2);
+ 
+ const savedTimestamp = localStorage.getItem('dart_app_json_time');
+ if (savedTimestamp) {
+   const tsBox = document.getElementById('backup-timestamp-box');
+   tsBox.innerText = "ℹ️ Zuletzt geladener Stand vom: " + savedTimestamp;
+   tsBox.style.display = "block";
+ }
+ switchTab('tab-dashboard');
 });
 
 function saveToLocalStorage() { localStorage.setItem('dart_app_data', JSON.stringify(appData)); }
@@ -370,35 +280,14 @@ function exportDataAsJSONFile() {
  const jetzt = new Date();
  const timestampFull = jetzt.toLocaleDateString('de-DE') + ", " + jetzt.toLocaleTimeString('de-DE') + " Uhr";
  const exportPaket = { metaKW: "Datei-Backup", metaDatum: timestampFull, payload: appData };
- 
- const YYYY = jetzt.getFullYear(), MM = String(jetzt.getMonth() + 1).padStart(2, '0'), DD = String(jetzt.getDate()).padStart(2, '0');
- const hh = String(jetzt.getHours()).padStart(2, '0'), mm = String(jetzt.getMinutes()).padStart(2, '0');
- const dateiname = `dartkasse_backup_${YYYY}-${MM}-${DD}_${hh}-${mm}.json`;
-
- // 1. KLASSISCHER DOWNLOAD (als Sicherheit für dein Tablet)
  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPaket, null, 2));
  const downloadAnchor = document.createElement('a');
+ const YYYY = jetzt.getFullYear(), MM = String(jetzt.getMonth() + 1).padStart(2, '0'), DD = String(jetzt.getDate()).padStart(2, '0');
+ const hh = String(jetzt.getHours()).padStart(2, '0'), mm = String(jetzt.getMinutes()).padStart(2, '0');
  downloadAnchor.setAttribute("href", dataStr);
- downloadAnchor.setAttribute("download", dateiname);
- document.body.appendChild(downloadAnchor); 
- downloadAnchor.click(); downloadAnchor.remove();
-
- // 2. VOLLAUTOMATISCHER UPLOAD INS GOOGLE DRIVE (KORRIGIERT)
- if(SKRIPT_URL && !SKRIPT_URL.includes("HIER_DEINE")) {
-   const blob = new Blob([JSON.stringify({ filename: dateiname, exportPaket: exportPaket })], { type: 'application/json' });
-   
-   // sendBeacon funkt die Datei ohne Sicherheitsblockaden direkt ins Drive
-   const erfolg = navigator.sendBeacon(SKRIPT_URL, blob);
-   
-   if (erfolg) {
-     alert("Kassenstand wurde erfolgreich an Google Drive gesendet! ☁️🎉");
-   } else {
-     console.error("Hintergrund-Upload konnte nicht gestartet werden.");
-   }
- }
+ downloadAnchor.setAttribute("download", `dartkasse_backup_${YYYY}-${MM}-${DD}_${hh}-${mm}.json`);
+ document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
 }
-
-
 
 function importDataFromJSONFile(inputElement) {
  const files = inputElement.files; 
@@ -1092,64 +981,7 @@ function importDataFromText() {
 }
 
 function clearAllData() { if (confirm("Alles löschen?")) { localStorage.removeItem('dart_app_data'); localStorage.removeItem('dart_app_json_time'); location.reload(); } }
-
-
-
-
-// ==========================================
-// GOOGLE DRIVE LIVE-SYNCHRONISATION
-// ==========================================
-
-// 1. Deine lange Web-App-URL
-const SKRIPT_URL = "https://script.google.com/macros/s/AKfycbxbB49dpdpEI7H-9yNeTN29Ub6uBgixQ_bRIVqTAxz4fMb9lmx9Y3ZosVmBzy69yTTdZg/exec";
-
-// 2. Funktion für den automatischen Start (neueste Datei)
-function loadLatestFromGoogleDrive() {
-  if(!SKRIPT_URL || SKRIPT_URL.includes("HIER_DEINE")) return;
-  fetch(SKRIPT_URL)
-    .then(res => res.json())
-    .then(daten => {
-      if (daten.payload) {
-        appData = daten.payload; 
-        saveToLocalStorage();
-        updateDashboard();
-      }
-    }).catch(err => console.error("Fehler beim automatischen Laden:", err));
-}
-
-// 3. Neue Funktion für die Datumsauswahl (ältere Datei)
-function loadSpecificDateFromDrive() {
-  const gewaehltesDatum = document.getElementById('historie-datum-auswahl').value;
-  if (!gewaehltesDatum) return;
-  
-  const urlMitDatum = SKRIPT_URL + "?datum=" + gewaehltesDatum;
-  
-  fetch(urlMitDatum)
-    .then(res => res.json())
-    .then(daten => {
-      if (daten.error) {
-        alert("Fehler: " + daten.error);
-        return;
-      }
-      if (daten.payload) {
-        appData = daten.payload; 
-        saveToLocalStorage();
-        updateDashboard();
-        
-        const tsBox = document.getElementById('backup-timestamp-box');
-        if (tsBox) {
-          tsBox.innerText = " ⚠️ ANGEZEIGTER STAND VOM: " + daten.metaDatum + " (Historie!)";
-          tsBox.style.display = "block";
-        }
-      }
-    })
-    .catch(err => alert("Dieses Datum konnte nicht geladen werden."));
-}
-
-// 4. AUTOMATISCHER STARTBEFEHL: Lädt die Daten sofort beim Öffnen der App!
-loadLatestFromGoogleDrive();
-
-
 </script>
 </body>
 </html>
+
