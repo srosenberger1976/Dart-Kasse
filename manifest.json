@@ -1,6 +1,6 @@
 {
-"short_name": "MeineApp",
-"name": "Meine neue eigene App",
+"short_name": "Dart-Kasse",
+"name": "Dart-Kasse App",
 "icons": [
 { "src": "icon-192.png", "type": "image/png", "sizes": "192x192" },
 { "src": "icon-512.png", "type": "image/png", "sizes": "512x512" }
