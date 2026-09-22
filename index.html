@@ -374,18 +374,21 @@ function exportDataAsJSONFile() {
  document.body.appendChild(downloadAnchor); 
  downloadAnchor.click(); downloadAnchor.remove();
 
- // 2. VOLLAUTOMATISCHER UPLOAD INS GOOGLE DRIVE
+ // 2. VOLLAUTOMATISCHER UPLOAD INS GOOGLE DRIVE (KORRIGIERT)
  if(SKRIPT_URL && !SKRIPT_URL.includes("HIER_DEINE")) {
-   fetch(SKRIPT_URL, {
-     method: "POST",
-     mode: "no-cors", // Verhindert Sicherheitsblockaden im Browser
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({ filename: dateiname, exportPaket: exportPaket })
-   })
-   .then(() => alert("Kassenstand wurde zusätzlich automatisch im Google Drive gesichert! ☁️🎉"))
-   .catch(err => console.error("Automatischer Upload fehlgeschlagen:", err));
+   const blob = new Blob([JSON.stringify({ filename: dateiname, exportPaket: exportPaket })], { type: 'application/json' });
+   
+   // sendBeacon funkt die Datei ohne Sicherheitsblockaden direkt ins Drive
+   const erfolg = navigator.sendBeacon(SKRIPT_URL, blob);
+   
+   if (erfolg) {
+     alert("Kassenstand wurde erfolgreich an Google Drive gesendet! ☁️🎉");
+   } else {
+     console.error("Hintergrund-Upload konnte nicht gestartet werden.");
+   }
  }
 }
+
 
 
 function importDataFromJSONFile(inputElement) {
