@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
+
+ 
+ 
+ 
+ 
+ 
+ <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Dart Kasse</title>
@@ -99,7 +105,28 @@
  .btn-top { flex: 1; min-width: 120px; font-size: 0.85rem !important; padding: 8px 5px !important; margin: 0 !important; white-space: nowrap; }
  .info-box { background: #d1ecf1; border-left: 5px solid #0c5460; color: #0c5460; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
  </style>
-</head>
+
+ 
+ <!-- Verbindung zum App-Manifest -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<!-- Registrierung des Hintergrund-Service-Workers -->
+<script>
+if ('serviceWorker' in navigator) {
+window.addEventListener('load', () => {
+navigator.serviceWorker.register('./sw.js')
+.then(reg => console.log('App-Modus bereit!'))
+.catch(err => console.error('Fehler:', err));
+});
+}
+</script>
+ 
+ 
+ 
+ 
+ 
+ 
+ </head>
 <body>
 <header> DC High Flyer 1 und 2 / Dart-Kasse 2026 </header> 🎯
 <div class="nav-bar">
