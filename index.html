@@ -361,14 +361,32 @@ function exportDataAsJSONFile() {
  const jetzt = new Date();
  const timestampFull = jetzt.toLocaleDateString('de-DE') + ", " + jetzt.toLocaleTimeString('de-DE') + " Uhr";
  const exportPaket = { metaKW: "Datei-Backup", metaDatum: timestampFull, payload: appData };
- const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPaket, null, 2));
- const downloadAnchor = document.createElement('a');
+ 
  const YYYY = jetzt.getFullYear(), MM = String(jetzt.getMonth() + 1).padStart(2, '0'), DD = String(jetzt.getDate()).padStart(2, '0');
  const hh = String(jetzt.getHours()).padStart(2, '0'), mm = String(jetzt.getMinutes()).padStart(2, '0');
+ const dateiname = `dartkasse_backup_${YYYY}-${MM}-${DD}_${hh}-${mm}.json`;
+
+ // 1. KLASSISCHER DOWNLOAD (als Sicherheit für dein Tablet)
+ const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportPaket, null, 2));
+ const downloadAnchor = document.createElement('a');
  downloadAnchor.setAttribute("href", dataStr);
- downloadAnchor.setAttribute("download", `dartkasse_backup_${YYYY}-${MM}-${DD}_${hh}-${mm}.json`);
- document.body.appendChild(downloadAnchor); downloadAnchor.click(); downloadAnchor.remove();
+ downloadAnchor.setAttribute("download", dateiname);
+ document.body.appendChild(downloadAnchor); 
+ downloadAnchor.click(); downloadAnchor.remove();
+
+ // 2. VOLLAUTOMATISCHER UPLOAD INS GOOGLE DRIVE
+ if(SKRIPT_URL && !SKRIPT_URL.includes("HIER_DEINE")) {
+   fetch(SKRIPT_URL, {
+     method: "POST",
+     mode: "no-cors", // Verhindert Sicherheitsblockaden im Browser
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ filename: dateiname, exportPaket: exportPaket })
+   })
+   .then(() => alert("Kassenstand wurde zusätzlich automatisch im Google Drive gesichert! ☁️🎉"))
+   .catch(err => console.error("Automatischer Upload fehlgeschlagen:", err));
+ }
 }
+
 
 function importDataFromJSONFile(inputElement) {
  const files = inputElement.files; 
@@ -1062,6 +1080,64 @@ function importDataFromText() {
 }
 
 function clearAllData() { if (confirm("Alles löschen?")) { localStorage.removeItem('dart_app_data'); localStorage.removeItem('dart_app_json_time'); location.reload(); } }
+
+
+
+
+// ==========================================
+// GOOGLE DRIVE LIVE-SYNCHRONISATION
+// ==========================================
+
+// 1. Deine lange Web-App-URL
+const SKRIPT_URL = "https://script.google.com/macros/s/AKfycbxbB49dpdpEI7H-9yNeTN29Ub6uBgixQ_bRIVqTAxz4fMb9lmx9Y3ZosVmBzy69yTTdZg/exec";
+
+// 2. Funktion für den automatischen Start (neueste Datei)
+function loadLatestFromGoogleDrive() {
+  if(!SKRIPT_URL || SKRIPT_URL.includes("HIER_DEINE")) return;
+  fetch(SKRIPT_URL)
+    .then(res => res.json())
+    .then(daten => {
+      if (daten.payload) {
+        appData = daten.payload; 
+        saveToLocalStorage();
+        updateDashboard();
+      }
+    }).catch(err => console.error("Fehler beim automatischen Laden:", err));
+}
+
+// 3. Neue Funktion für die Datumsauswahl (ältere Datei)
+function loadSpecificDateFromDrive() {
+  const gewaehltesDatum = document.getElementById('historie-datum-auswahl').value;
+  if (!gewaehltesDatum) return;
+  
+  const urlMitDatum = SKRIPT_URL + "?datum=" + gewaehltesDatum;
+  
+  fetch(urlMitDatum)
+    .then(res => res.json())
+    .then(daten => {
+      if (daten.error) {
+        alert("Fehler: " + daten.error);
+        return;
+      }
+      if (daten.payload) {
+        appData = daten.payload; 
+        saveToLocalStorage();
+        updateDashboard();
+        
+        const tsBox = document.getElementById('backup-timestamp-box');
+        if (tsBox) {
+          tsBox.innerText = " ⚠️ ANGEZEIGTER STAND VOM: " + daten.metaDatum + " (Historie!)";
+          tsBox.style.display = "block";
+        }
+      }
+    })
+    .catch(err => alert("Dieses Datum konnte nicht geladen werden."));
+}
+
+// 4. AUTOMATISCHER STARTBEFEHL: Lädt die Daten sofort beim Öffnen der App!
+loadLatestFromGoogleDrive();
+
+
 </script>
 </body>
 </html>
