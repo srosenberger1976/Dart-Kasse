@@ -139,16 +139,35 @@ navigator.serviceWorker.register('./sw.js')
  <div id="backup-timestamp-box" class="info-box" style="display: none;"></div>
  <div class="card">
  <h3>Finanzen Übersicht</h3>
- <div id="finance-card-content">
+ 
+
+
+<div id="finance-card-content">
    <p> <b>Dartkasse Gesamt:</b> <span id="stats-dartkasse">0.00</span> € 💰</p>
    <p> <b>Kasse Sportlerheim:</b> <span id="stats-heim">0.00</span> € </p> 🍻
    <button class="blue" style="margin-top:10px;" onclick="printAllFinances()"> Gesamtbericht drucken (PDF) 🖨</button>
  </div>
  </div>
+
+ <!-- 🔽 HIER GENAU FÜGST DU DEN NEUEN KASTEN EIN 🔽 -->
+ <div class="card" style="margin-top:10px; background:#e9ecef; color:#212529;">
+   <h4>📅 Älteren Kassenstand aufrufen</h4>
+   <input type="date" id="historie-datum-auswahl" onchange="loadSpecificDateFromDrive()">
+   <button class="secondary" onclick="loadLatestFromGoogleDrive()" style="margin-top:5px; background:#6c757d;">Zurück zum aktuellen Stand 🔄</button>
+ </div>
+ <!-- 🔼 HIER ENDET DER NEUE KASTEN 🔼 -->
+
  <div class="card">
  <h3>Offene Schulden pro Spieler</h3>
  <div id="dashboard-debts-list">Keine Außenstände.</div>
- </div>
+
+
+
+
+
+
+
+</div>
  <div class="card">
  <h3>Manuelle Buchung</h3>
  <select id="manual-target"><option value="dart">Dartkasse</option><option value="heim">Sportlerheim Kasse</option></select>
@@ -282,26 +301,36 @@ let appData = { players: [], drinks: {}, kassen: { dart: 0.0, heim: 0.0 }, debts
 const SKRIPT_URL = "https://script.google.com/macros/s/AKfycbxbB49dpdpEI7H-9yNeTN29Ub6uBgixQ_bRIVqTAxz4fMb9lmx9Y3ZosVmBzy69yTTdZg/exec";
 
 // 2. Diese Funktion holt die Daten automatisch aus dem Drive
-function loadLatestFromGoogleDrive() {
-  if(!SKRIPT_URL || SKRIPT_URL.includes("HIER_DEINE")) return;
-  fetch(SKRIPT_URL)
+function loadSpecificDateFromDrive() {
+  const gewaehltesDatum = document.getElementById('historie-datum-auswahl').value; // Gibt YYYY-MM-DD zurück
+  if (!gewaehltesDatum) return;
+  
+  // Wir hängen das Wunschdatum als Suchbefehl an die Google-URL an
+  const urlMitDatum = SKRIPT_URL + "?datum=" + gewaehltesDatum;
+  
+  fetch(urlMitDatum)
     .then(res => res.json())
     .then(daten => {
+      if (daten.error) {
+        alert("Fehler: " + daten.error);
+        return;
+      }
       if (daten.payload) {
         appData = daten.payload; 
         saveToLocalStorage();
         updateDashboard();
+        
+        // Anzeige aktualisieren, damit du weißt, dass du in der Vergangenheit bist
+        const tsBox = document.getElementById('backup-timestamp-box');
+        if (tsBox) {
+          tsBox.innerText = " ⚠️ ANGEZEIGTER STAND VOM: " + daten.metaDatum + " (Historie!)";
+          tsBox.style.display = "block";
+        }
       }
-    }).catch(err => console.error("Fehler:", err));
+    })
+    .catch(err => alert("Dieses Datum konnte nicht geladen werden."));
 }
 
-document.addEventListener("DOMContentLoaded", () => {
- loadFromLocalStorage();
- 
- // 3. Hier der Startbefehl fürs Google-Laden
- loadLatestFromGoogleDrive();
- 
- // ... ab hier läuft dein alter Code einfach unverändert weiter!
 
 
 
