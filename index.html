@@ -278,8 +278,33 @@ navigator.serviceWorker.register('./sw.js')
 <script>
 let appData = { players: [], drinks: {}, kassen: { dart: 0.0, heim: 0.0 }, debts: {}, kws: {}, fineU40: 0.20, fineVorbei: 0.30 };
 
+// 1. Hier deine Google-URL eintragen
+const SKRIPT_URL = "https://script.google.com/macros/s/AKfycbxbB49dpdpEI7H-9yNeTN29Ub6uBgixQ_bRIVqTAxz4fMb9lmx9Y3ZosVmBzy69yTTdZg/exec";
+
+// 2. Diese Funktion holt die Daten automatisch aus dem Drive
+function loadLatestFromGoogleDrive() {
+  if(!SKRIPT_URL || SKRIPT_URL.includes("HIER_DEINE")) return;
+  fetch(SKRIPT_URL)
+    .then(res => res.json())
+    .then(daten => {
+      if (daten.payload) {
+        appData = daten.payload; 
+        saveToLocalStorage();
+        updateDashboard();
+      }
+    }).catch(err => console.error("Fehler:", err));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
  loadFromLocalStorage();
+ 
+ // 3. Hier der Startbefehl fürs Google-Laden
+ loadLatestFromGoogleDrive();
+ 
+ // ... ab hier läuft dein alter Code einfach unverändert weiter!
+
+
+
  if (Object.keys(appData.drinks).length === 0) appData.drinks = { "Bier": 2.50, "Cola": 2.00, "Wasser": 1.50 };
  let rawText = "";
  for (let [name, price] of Object.entries(appData.drinks)) { rawText += name + '=' + Number(price).toFixed(2) + '\n'; }
@@ -1011,4 +1036,3 @@ function clearAllData() { if (confirm("Alles löschen?")) { localStorage.removeI
 </script>
 </body>
 </html>
-
