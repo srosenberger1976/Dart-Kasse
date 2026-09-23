@@ -98,7 +98,21 @@
  .button-row-top { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; margin-top: 5px; }
  .btn-top { flex: 1; min-width: 120px; font-size: 0.85rem !important; padding: 8px 5px !important; margin: 0 !important; white-space: nowrap; }
  .info-box { background: #d1ecf1; border-left: 5px solid #0c5460; color: #0c5460; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
- </style>
+ 
+
+.player-fold-content {
+    background: #eef2f7 !important; /* Ein frisches, helles Blau-Grau für beste Erkennbarkeit */
+    border-top: 2px solid #b0c4de !important; /* Eine deutlichere Trennlinie zum Spielernamen */
+    border-bottom: 2px solid #b0c4de !important; /* Abschlusslinie nach unten */
+    padding: 15px !important;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); /* Ein leichter Innenschatten für Tiefenwirkung */
+}
+
+
+
+
+
+</style>
 </head>
 <body>
 <header> DC High Flyer 1 und 2 / Dart-Kasse 2026 </header> 🎯
@@ -412,17 +426,29 @@ function loadKWDetails() {
  let totalLiveAmount = drinkCost + entry.penalties + entry.absentPenalty; const abgehakt = kwData.status === 'booked' || entry.isSingleBooked; const contentId = "player-content-" + index;
  html += '<div style="background:#f8f9fa; color:#212529; padding:0; margin-bottom:10px; border-radius:6px; border-left: 5px solid ' + (abgehakt?'#4caf50':(entry.absentPenalty>0?'#e50914':'#ff9800')) + '; overflow:hidden; border:1px solid #ced4da;">';
  html += '<div onclick="togglePlayerWindow(\'' + contentId + '\')" style="display:flex; justify-content:space-between; align-items:center; padding:12px; cursor:pointer; background:#e9ecef; color:#212529; user-select:none;"><b> ' + p + '</b>👤<span class="badge" style="background:' + (abgehakt?'#4caf50':(entry.absentPenalty>0?'#e50914':'#ff9800')) + '; color:#fff;">' + (abgehakt?'Bezahlt':(entry.absentPenalty>0?'Abwesend (2€)':'Im Training')) + '</span></div>';
- html += '<div id="' + contentId + '" class="player-fold-content" style="display:none; padding:12px; border-top:1px solid #dee2e6;"><div style="margin-bottom:10px; font-size:0.85rem; color:#495057;"> Erfasst: ' + (dSum.length > 0 ? dSum.join(', ') : 'Nichts') + '<br> Strafen: ' + entry.penalties.toFixed(2) + '€ | <b>Betrag aktuell: <span style="color:#d9534f">' + totalLiveAmount.toFixed(2) + '€ </span></b></div>💸';
+ 
+
+html += '<div id="' + contentId + '" class="player-fold-content" style="display:none; background-color: #dbe5f0 !important; padding: 15px !important; border-top: 3px solid #7ea3cc !important; border-bottom: 3px solid #7ea3cc !important;"><div style="margin-bottom:12px; font-size:0.95rem; color:#212529; line-height: 1.4; border-bottom: 1px dashed #7ea3cc; padding-bottom: 8px;"><b>Erfasst:</b> ' + (dSum.length > 0 ? dSum.join(', ') : 'Nichts') + '<br><b>Strafen:</b> ' + entry.penalties.toFixed(2) + '€ | <b style="font-size:1.05rem;">Betrag aktuell: <span style="color:#d9534f">' + totalLiveAmount.toFixed(2) + '€</span></b></div>';
+
+
+
+
+
  if (!abgehakt) {
  let priceU40 = appData.fineU40 !== undefined ? appData.fineU40 : 0.20; let priceVorbei = appData.fineVorbei !== undefined ? appData.fineVorbei : 0.30;
  html += '<div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; background:#f1f3f5; padding:6px; border-radius:4px; border:1px solid #dee2e6;"><span style="font-size:0.85rem; color:#495057;">Anzahl für Klick:</span><input type="number" id="drink-qty-' + index + '" value="1" min="1" style="width:60px; text-align:center; padding:3px; margin:0; background:#fff; color:#212529; border:1px solid #ced4da; border-radius:4px; font-weight:bold;"></div>';
- html += '<div class="drink-btn-grid">';
+ 
+html += '<div class="drink-btn-grid" style="background-color: #cedcee !important; padding: 10px; border-radius: 6px; border: 1px solid #7ea3cc;">';
+
  
  /* Hier wird der Preis ermittelt und formatiert hinter den Namen gehängt */
  for (let dName of Object.keys(appData.drinks)) { 
    let currentPrice = Number(appData.drinks[dName] || 0).toFixed(2);
-   html += '<button class="drink-btn" style="background:#e9ecef; color:#212529; border:1px solid #ced4da;" onclick="addMultipleDrinks(\'' + kwKey + '\',\'' + p + '\',\'' + dName + '\',' + index + ')">+ ' + dName + ' (' + currentPrice + ' €)</button>'; 
- }
+   
+
+html += '<button class="drink-btn" style="background:#ffffff; color:#212529; border:1px solid #bdc3c7; font-weight: bold;" onclick="addMultipleDrinks(\'' + kwKey + '\',\'' + p + '\',\'' + dName + '\',' + index + ')">+ ' + dName + ' (' + currentPrice + ' €)</button>';
+}
+
  
  html += '</div><div class="flex-row" style="margin-top:5px; flex-wrap:wrap;">';
  html += '<button class="secondary" style="font-size:0.75rem; padding:5px; background:#6c757d;" onclick="resetSinglePlayerKWWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + index + ')"> !!!!! letzte Eingabe löschen !!!!! </button>🔄';
@@ -443,7 +469,23 @@ function loadKWDetails() {
 
 
 
-function togglePlayerWindow(targetId) { document.querySelectorAll('.player-fold-content').forEach(el => { if(el.id !== targetId) el.style.display = 'none'; }); const el = document.getElementById(targetId); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
+function togglePlayerWindow(targetId) { 
+    document.querySelectorAll('.player-fold-content').forEach(el => {
+        if(el.id !== targetId) el.style.display = 'none'; 
+    }); 
+    const el = document.getElementById(targetId); 
+    if (el.style.display === 'block') {
+        el.style.display = 'none';
+    } else {
+        el.style.display = 'block';
+        // Hier erzwingen wir das neue Design direkt per JavaScript:
+        el.style.backgroundColor = '#dbe5f0'; // Ein deutlich sichtbares, schickes Graublau
+        el.style.padding = '15px';            // Mehr Abstand nach innen
+        el.style.borderTop = '3px solid #7ea3cc'; // Kräftiger Balken oben
+        el.style.borderBottom = '3px solid #7ea3cc'; // Kräftiger Balken unten
+    }
+}
+
 
 function addMultipleDrinks(kw, p, dn, idx) {
  const qtyInput = document.getElementById('drink-qty-' + idx); let multiplier = parseInt(qtyInput.value); if (isNaN(multiplier) || multiplier < 1) multiplier = 1;
@@ -984,4 +1026,3 @@ function clearAllData() { if (confirm("Alles löschen?")) { localStorage.removeI
 </script>
 </body>
 </html>
-
