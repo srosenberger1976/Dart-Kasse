@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dartkasse-cache-v1';
+const CACHE_NAME = 'dartkasse-cache-v2';
 const ASSETS = [
   './',
   './index.html',
