@@ -1,13 +1,13 @@
 {
-"short_name": "Dart-Kasse",
-"name": "Dart-Kasse App",
-"icons": [
-{ "src": "icon-192.png", "type": "image/png", "sizes": "192x192" },
-{ "src": "icon-512.png", "type": "image/png", "sizes": "512x512" }
-],
-"start_url": "./index.html",
-"background_color": "#ffffff",
-"display": "standalone",
-"theme_color": "#000000",
-"orientation": "portrait"
+  "short_name": "DartKasse",
+  "name": "Dart Kasse - DC High Flyer",
+  "icons": [
+    { "src": "icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#2c3e50",
+  "display": "standalone",
+  "theme_color": "#e50914",
+  "orientation": "portrait"
 }
