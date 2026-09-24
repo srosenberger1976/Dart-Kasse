@@ -4,84 +4,77 @@
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Dart Kasse</title>
+ 
+ <!-- PWA VERBINDUNG CODE -->
+ <link rel="manifest" href="./manifest.json">
+ <meta name="theme-color" content="#e50914">
+ 
  <style>
  :root { 
-   --bg-gradient: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
-   --card: #f8f9fa; 
-   --txt: #212529; 
-   --accent: #e50914; 
-   --ok: #4caf50; 
+ --bg-gradient: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
+ --card: #f8f9fa; 
+ --txt: #212529; 
+ --accent: #e50914; 
+ --ok: #4caf50; 
  }
  * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
  body { 
-   background: var(--bg-gradient); 
-   background-attachment: fixed;
-   color: #fff; 
-   padding-bottom: 75px; 
-   min-height: 100vh;
+ background: var(--bg-gradient); 
+ background-attachment: fixed;
+ color: #fff; 
+ padding-bottom: 75px; 
+ min-height: 100vh;
  }
  header { background: var(--accent); padding: 15px; text-align: center; font-weight: bold; color: #fff; }
  .tab-content { display: none; padding: 15px; }
  .tab-content.active { display: block; }
- 
 .nav-bar {
-    position: static; /* Gelöst vom unteren Rand */
-    width: 100%;
-    background: #e9ecef;
-    border-bottom: 3px solid #ced4da; /* Linie nach unten versetzt */
-    border-top: none;
-    display: flex;
-    justify-content: space-around;
-    padding: 12px 10px;
-    z-index: 1000;
-    cursor: default;
-    gap: 10px; /* Abstand für den 3D-Effekt */
+ position: static; 
+ width: 100%;
+ background: #e9ecef;
+ border-bottom: 3px solid #ced4da; 
+ border-top: none;
+ display: flex;
+ justify-content: space-around;
+ padding: 12px 10px;
+ z-index: 1000;
+ cursor: default;
+ gap: 10px; 
 }
-
 .nav-btn {
-    flex: 1;
-    max-width: 220px;
-    background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%); /* 3D-Verlauf */
-    border: 1px solid #b5b5b5;
-    border-radius: 8px;
-    color: #495057;
-    font-size: 0.9rem;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 5px;
-    transition: all 0.15s ease;
-    /* Plastischer Schatten nach unten */
-    box-shadow: 0 4px 0 #b8b8b8, 0 5px 5px rgba(0,0,0,0.15);
+ flex: 1;
+ max-width: 220px;
+ background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%); 
+ border: 1px solid #b5b5b5;
+ border-radius: 8px;
+ color: #495057;
+ font-size: 0.9rem;
+ font-weight: bold;
+ cursor: pointer;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ padding: 10px 5px;
+ transition: all 0.15s ease;
+ box-shadow: 0 4px 0 #b8b8b8, 0 5px 5px rgba(0,0,0,0.15);
 }
-
 .nav-btn:hover {
-    color: var(--accent);
-    background: linear-gradient(to bottom, #ffffff 0%, #ececec 100%);
-    transform: translateY(1px);
-    box-shadow: 0 3px 0 #b8b8b8, 0 4px 4px rgba(0,0,0,0.15);
+ color: var(--accent);
+ background: linear-gradient(to bottom, #ffffff 0%, #ececec 100%);
+ transform: translateY(1px);
+ box-shadow: 0 3px 0 #b8b8b8, 0 4px 4px rgba(0,0,0,0.15);
 }
-
 .nav-btn.active {
-    color: #fff;
-    /* Roter Aktiv-Farbverlauf passend zu deiner Akzentfarbe */
-    background: linear-gradient(to bottom, #ff2a35 0%, #b3000b 100%);
-    border-color: #800008;
-    font-weight: bold;
-    /* Heruntergedrückter 3D-Effekt */
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 #600006, 0 2px 2px rgba(0,0,0,0.2);
+ color: #fff;
+ background: linear-gradient(to bottom, #ff2a35 0%, #b3000b 100%);
+ border-color: #800008;
+ font-weight: bold;
+ transform: translateY(3px);
+ box-shadow: 0 1px 0 #600006, 0 2px 2px rgba(0,0,0,0.2);
 }
-
-
-
-
  .card { background: var(--card); color: var(--txt); padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
  .card-edit-area { background: #e9ecef !important; border: 1px solid #ced4da; }
  h3, h4 { margin-bottom: 10px; border-bottom: 1px solid #dee2e6; padding-bottom: 5px; color: #212529; }
- 
  input, select, button, textarea { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ced4da; font-size: 1rem; }
  input, select, textarea { background: #fff; color: #212529; }
  button { background: var(--accent); color: white; font-weight: bold; cursor: pointer; border: none; }
@@ -98,30 +91,77 @@
  .button-row-top { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; margin-top: 5px; }
  .btn-top { flex: 1; min-width: 120px; font-size: 0.85rem !important; padding: 8px 5px !important; margin: 0 !important; white-space: nowrap; }
  .info-box { background: #d1ecf1; border-left: 5px solid #0c5460; color: #0c5460; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
- 
-
 .player-fold-content {
-    background: #eef2f7 !important; /* Ein frisches, helles Blau-Grau für beste Erkennbarkeit */
-    border-top: 2px solid #b0c4de !important; /* Eine deutlichere Trennlinie zum Spielernamen */
-    border-bottom: 2px solid #b0c4de !important; /* Abschlusslinie nach unten */
-    padding: 15px !important;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); /* Ein leichter Innenschatten für Tiefenwirkung */
+ background: #eef2f7 !important; 
+ border-top: 2px solid #b0c4de !important; 
+ border-bottom: 2px solid #b0c4de !important; 
+ padding: 15px !important;
+ box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); 
+}
+</style>
+
+<!-- SKRIPT FÜR AUTOMATISCHE REGISTRIERUNG UND NUTZER-INSTALLATION -->
+<script>
+let deferredPrompt;
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Wichtig: ./ sorgt dafür, dass es im aktuellen Projektordner läuft!
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('App-Modus bereit für dieses Projekt!'))
+      .catch(err => console.error('PWA Fehler:', err));
+  });
 }
 
+// Android & Chrome: Abfangen des Installations-Popups für den eigenen Button
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // Zeige den Installations-Button auf dem Dashboard an
+  const installArea = document.getElementById('pwa-install-container');
+  if (installArea) {
+    installArea.style.display = 'block';
+  }
+});
 
+async function triggerPWAInstallation() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log(`Nutzer wählte: ${outcome}`);
+  deferredPrompt = null;
+  const installArea = document.getElementById('pwa-install-container');
+  if (installArea) installArea.style.display = 'none';
+}
+</script>
 
-
-
-</style>
 </head>
 <body>
-<header> DC High Flyer 1 und 2 / Dart-Kasse 2026 </header> 🎯
+<header> DC High Flyer 1 und 2 / Dart-Kasse 2026 </header> 
+
+<!-- EIGENER INSTALLATIONS-BEREICH (Wird nur geladen, wenn bereit) -->
+<div id="pwa-install-container" style="display: none; padding: 10px 15px; background: #fff; color: #212529; border-bottom: 2px solid var(--accent);">
+  <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+    <small style="font-size: 0.85rem; font-weight: bold; line-height: 1.2;">Dart-Kasse als App auf dem Startbildschirm hinzufügen?</small>
+    <button onclick="triggerPWAInstallation()" style="width: auto; padding: 6px 12px; margin: 0; background: var(--ok); font-size: 0.85rem;">Jetzt Installieren</button>
+  </div>
+</div>
+
 <div class="nav-bar">
- <button class="nav-btn active" onclick="switchTab('tab-dashboard')"> Dashboard 📊</button>
+ <button class="nav-btn active" onclick="switchTab('tab-dashboard')"> Dashboard </button> 
  <button class="nav-btn" onclick="switchTab('tab-kw')"> KW 📅 Erfassung</button>
  <button class="nav-btn" onclick="switchTab('tab-spieler')"> 👥 Spieler</button>
  <button class="nav-btn" onclick="switchTab('tab-config')"> Setup ⚙</button>
 </div>
+
+
+
+
+
+
+
+
 <div id="tab-dashboard" class="tab-content active">
  <div id="backup-timestamp-box" class="info-box" style="display: none;"></div>
  <div class="card">
