@@ -451,10 +451,17 @@ html += '<button class="drink-btn" style="background:#ffffff; color:#212529; bor
 
  
  html += '</div><div class="flex-row" style="margin-top:5px; flex-wrap:wrap;">';
- html += '<button class="secondary" style="font-size:0.75rem; padding:5px; background:#6c757d;" onclick="resetSinglePlayerKWWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + index + ')"> !!!!! letzte Eingabe löschen !!!!! </button>🔄';
+html += '<button class="secondary" style="font-size:1.15rem; padding:12px 10px; background:#e50914 !important; color:#ffffff !important; font-weight:bold; border:none; margin-bottom:5px;" onclick="resetSinglePlayerKWWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + index + ')"> !!!!! letzte Eingabe löschen !!!!! </button> ';
+
  html += '<button class="blue" style="font-size:0.75rem; padding:5px; max-width:105px;" onclick="closeCurrentPlayer()"> Schließen </button>❌';
  html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#6c757d;" onclick="addFineWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + priceU40 + ',' + index + ')"> U40 (+' + priceU40.toFixed(2) + '€)</button>🎯';
  html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#6c757d;" onclick="addFineWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + priceVorbei + ',' + index + ')"> Lusche (+' + priceVorbei.toFixed(2) + '€)</button>❌';
+html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#e50914 !important; color:#ffffff !important; font-weight:bold;" onclick="addSpielgeldWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + index + ')"> Extra Einwurfgeld (+2.00€)</button> ';
+
+
+
+
+
  html += '<button class="success" style="font-size:0.75rem; padding:5px; width:auto; flex:1;" onclick="bookSingle(\'' + kwKey + '\',\'' + p + '\')"> Einzeln & Bezahlt</button>💰';
  html += '</div>';
  }
@@ -502,6 +509,29 @@ function addFineWithKeepOpen(kw, p, amt, idx) {
  appData.kws[kw].entries[p].penalties += amt; appData.kws[kw].entries[p].absentPenalty = 0.0; saveToLocalStorage(); loadKWDetails();
  document.getElementById('player-content-' + idx).style.display = 'block';
 }
+
+
+
+function addSpielgeldWithKeepOpen(kw, p, idx) {
+    if (!appData.actionHistory) appData.actionHistory = {};
+    if (!appData.actionHistory[p]) appData.actionHistory[p] = [];
+    appData.actionHistory[p].push({ type: 'fine', data: 2.00, oldAbsentPenalty: appData.kws[kw].entries[p].absentPenalty });
+    
+    appData.kws[kw].entries[p].penalties += 2.00; 
+    appData.kws[kw].entries[p].absentPenalty = 0.0; 
+    saveToLocalStorage(); 
+    loadKWDetails();
+    document.getElementById('player-content-' + idx).style.display = 'block';
+}
+
+
+
+
+
+
+
+
+
 
 function resetSinglePlayerKWWithKeepOpen(kw, p, idx) {
  if (!appData.actionHistory || !appData.actionHistory[p] || appData.actionHistory[p].length === 0) { return alert("Keine Aktionen zum Rückgängigmachen gefunden!"); }
