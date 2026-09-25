@@ -178,8 +178,21 @@ async function triggerPWAInstallation() {
  </div>
  <div class="card">
  <h3>Manuelle Buchung</h3>
- <select id="manual-target"><option value="dart">Dartkasse</option><option value="heim">Sportlerheim Kasse</option></select>
-<input type="text" inputmode="numeric" pattern="-?[0-9]*([\.,][0-9]*)?" id="manual-amount" placeholder="Betrag (€)">
+ <select id="manual-target">
+   <option value="dart">Dartkasse</option>
+   <option value="heim">Sportlerheim Kasse</option>
+ </select>
+ 
+ <!-- NEU: Schalter für die Buchungsart -->
+ <select id="manual-type" style="background: #fff; color: #212529; font-weight: bold;">
+   <option value="plus" style="color: var(--ok);">➕ Einnahme / Zubuchung (+)</option>
+   <option value="minus" style="color: var(--accent);">➖ Ausgabe / Abbuchung (-)</option>
+ </select>
+ 
+ <input type="number" id="manual-amount" step="0.01" inputmode="decimal" placeholder="Betrag (€)">
+ <input type="text" id="manual-reason" placeholder="Zweck">
+ <button onclick="addManualTx()">Buchen</button>
+ </div>
 
  <input type="text" id="manual-reason" placeholder="Zweck">
  <button onclick="addManualTx()">Buchen</button>
@@ -928,34 +941,37 @@ function renderHistory() {
 /* KORREKTUR TEIL 3B-3.2: Registriert manuelle Buchungen sofort im Live-Protokoll */
 function addManualTx() {
  const t = document.getElementById('manual-target').value; 
-
-
-
- const rawAmount = document.getElementById('manual-amount').value;
-const amt = parseFloat(rawAmount.replace(',', '.'));
- 
-
-
-
+ const bType = document.getElementById('manual-type').value; // Holt die Buchungsart (plus/minus)
+ let amt = parseFloat(document.getElementById('manual-amount').value.replace(',', '.')); 
  const r = document.getElementById('manual-reason').value.trim();
+
  if (isNaN(amt) || amt === 0 || !r) return alert("Bitte Betrag und Zweck ausfüllen!");
- 
+
+ // Wenn "Abbuchung" gewählt wurde, wandeln wir den Betrag in eine negative Zahl um
+ if (bType === 'minus') {
+   amt = -Math.abs(amt);
+ }
+
  // Kassenstand anpassen
  appData.kassen[t] += amt; 
  
- // Zwecktext für das Protokollboard lesbar formatieren
+ // Zwecktext für das Protokollboard lesbar formatieren (zeigt direkt + oder - an)
  let kassenName = t === 'dart' ? 'Dartkasse' : 'Sportlerheim';
- let protokollZweck = kassenName + " (" + r + ")";
- 
- // WICHTIG: Erst in die Historie pushen (damit Zeitstempel generiert wird), danach speichern!
+ let vorzeichen = bType === 'minus' ? '[-] ' : '[+] ';
+ let protokollZweck = kassenName + " " + vorzeichen + "(" + r + ")";
+
+ // In die Historie pushen und speichern
  pushToGlobalHistory('manuell', protokollZweck, amt);
  
  // Felder leeren
  document.getElementById('manual-amount').value = ""; 
  document.getElementById('manual-reason').value = "";
+ document.getElementById('manual-type').value = "plus"; // Zurück auf Standard setzen
  
  saveToLocalStorage(); 
  updateDashboard();
+}
+
 }
 
 
