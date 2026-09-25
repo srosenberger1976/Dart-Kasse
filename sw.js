@@ -928,7 +928,15 @@ function renderHistory() {
 /* KORREKTUR TEIL 3B-3.2: Registriert manuelle Buchungen sofort im Live-Protokoll */
 function addManualTx() {
  const t = document.getElementById('manual-target').value; 
- const amt = parseFloat(document.getElementById('manual-amount').value); 
+
+
+
+ const rawAmount = document.getElementById('manual-amount').value;
+const amt = parseFloat(rawAmount.replace(',', '.'));
+ 
+
+
+
  const r = document.getElementById('manual-reason').value.trim();
  if (isNaN(amt) || amt === 0 || !r) return alert("Bitte Betrag und Zweck ausfüllen!");
  
