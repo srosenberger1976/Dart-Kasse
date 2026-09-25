@@ -183,16 +183,20 @@ async function triggerPWAInstallation() {
    <option value="heim">Sportlerheim Kasse</option>
  </select>
  
- <!-- Schalter für die Buchungsart -->
  <select id="manual-type" style="background: #fff; color: #212529; font-weight: bold;">
    <option value="plus" style="color: var(--ok);">➕ Einnahme / Zubuchung (+)</option>
    <option value="minus" style="color: var(--accent);">➖ Ausgabe / Abbuchung (-)</option>
  </select>
  
+ <!-- DIESE ZEILE HAT BEI DIR GEFEHLT: -->
  <input type="number" id="manual-amount" step="0.01" inputmode="decimal" placeholder="Betrag (€)">
+ 
  <input type="text" id="manual-reason" placeholder="Zweck">
  <button onclick="addManualTx()">Buchen</button>
- </div> <!-- Schließt das manuelle Buchungsfenster sauber ab -->
+ </div> <!-- Schließt das manuelle Buchungsfenster ab -->
+</div> <!-- Schließt die manuelle Buchungskarte ab -->
+</div> <!-- Schließt das gesamte Dashboard-Tab ab -->
+
 
 
 
