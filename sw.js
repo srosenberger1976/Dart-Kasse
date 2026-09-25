@@ -179,7 +179,8 @@ async function triggerPWAInstallation() {
  <div class="card">
  <h3>Manuelle Buchung</h3>
  <select id="manual-target"><option value="dart">Dartkasse</option><option value="heim">Sportlerheim Kasse</option></select>
- <input type="number" id="manual-amount" step="0.01" placeholder="Betrag (€)">
+<input type="text" inputmode="numeric" pattern="-?[0-9]*([\.,][0-9]*)?" id="manual-amount" placeholder="Betrag (€)">
+
  <input type="text" id="manual-reason" placeholder="Zweck">
  <button onclick="addManualTx()">Buchen</button>
  </div>
