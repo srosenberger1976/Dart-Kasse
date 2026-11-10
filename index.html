@@ -3,7 +3,7 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Dart Kasse</title>
+ <title>Dart Kasse1.0</title>
  
  <!-- PWA VERBINDUNG CODE -->
  <link rel="manifest" href="./manifest.json">
@@ -86,18 +86,35 @@
  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; color: var(--txt); }
  th, td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
  th { background: #e9ecef; }
- .drink-btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 5px; }
- .drink-btn { background: #dae0e5; color: #212529; border: 1px solid #ced4da; font-size: 0.85rem; padding: 8px; }
- .button-row-top { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; margin-top: 5px; }
+
+
+ .drink-btn-grid { 
+   display: grid; 
+   grid-template-columns: repeat(2, 1fr); 
+   gap: 12px; 
+   margin-top: 10px; 
+ }
+ 
+
+ .drink-btn { 
+   background: #ffffff; 
+   color: #212529; 
+   border: 1px solid #ced4da; 
+   font-size: 1.1rem !important; 
+   padding: 16px 8px !important; 
+   font-weight: bold; 
+   min-height: 60px; /* Schön hoch für Touch-Bedienung */
+ }
+ 
+.button-row-top { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; margin-top: 5px; }
+
  .btn-top { flex: 1; min-width: 120px; font-size: 0.85rem !important; padding: 8px 5px !important; margin: 0 !important; white-space: nowrap; }
  .info-box { background: #d1ecf1; border-left: 5px solid #0c5460; color: #0c5460; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.9rem; }
-.player-fold-content {
- background: #eef2f7 !important; 
- border-top: 2px solid #b0c4de !important; 
- border-bottom: 2px solid #b0c4de !important; 
- padding: 15px !important;
- box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); 
-}
+ .player-fold-content button {
+   padding: 16px 10px !important;
+   font-size: 1.05rem !important;
+   min-height: 55px;
+ }
 </style>
 
 <!-- SKRIPT FÜR AUTOMATISCHE REGISTRIERUNG UND NUTZER-INSTALLATION -->
@@ -244,14 +261,22 @@ async function triggerPWAInstallation() {
 </div>
 <div id="tab-spieler" class="tab-content">
  <div class="card">
- <h3>Neuen Spieler hinzufügen</h3>
- <div class="flex-row">
- <input type="text" id="new-player-name" placeholder="Name">
- <button onclick="addPlayer()">Hinzufügen</button>
+   <h3>Neuen Spieler hinzufügen</h3>
+   <div class="flex-row" style="align-items: center; flex-wrap: wrap; gap: 15px;">
+     <input type="text" id="new-player-name" placeholder="Name" style="flex: 2; min-width: 150px;">
+     <label style="color: #212529; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none;">
+       <input type="checkbox" id="new-player-is-guest" style="width: auto; margin: 0;"> Als Gast-Spieler anlegen 👤
+     </label>
+     <button onclick="addPlayer()" style="flex: 1; min-width: 120px; margin: 0;">Hinzufügen</button>
+   </div>
  </div>
+
+ <div class="card">
+   <h3>Registrierte Spieler</h3>
+   <div id="players-list-config"></div>
  </div>
- <div class="card"><h3>Registrierte Spieler</h3><div id="players-list-config"></div></div>
 </div>
+
 <div id="tab-config" class="tab-content">
  <div class="card">
  <h3>Getränkeliste (Sportlerheim)</h3>
@@ -411,21 +436,56 @@ function switchTab(tabId) {
 }
 
 function addPlayer() {
- const input = document.getElementById('new-player-name'); const name = input.value.trim();
+ const input = document.getElementById('new-player-name'); 
+ const name = input.value.trim();
+ const checkGuest = document.getElementById('new-player-is-guest');
+ 
  if (!name || appData.players.includes(name)) return alert("Ungültig oder existiert bereits!");
- appData.players.push(name); appData.debts[name] = 0.0; input.value = "";
- saveToLocalStorage(); renderPlayersConfig();
+ 
+ // Falls die Struktur für Gäste in appData noch fehlt, erstellen wir sie kurz
+ if (!appData.guestFlags) appData.guestFlags = {};
+ 
+ // Speichern, ob es ein Stammspieler oder ein Gast ist
+ appData.guestFlags[name] = checkGuest ? checkGuest.checked : false;
+ 
+ appData.players.push(name); 
+ appData.debts[name] = 0.0; 
+ 
+ // Eingabefelder zurücksetzen
+ input.value = "";
+ if (checkGuest) checkGuest.checked = false;
+ 
+ saveToLocalStorage(); 
+ renderPlayersConfig();
 }
+
 
 function removePlayer(name) {
  if (!confirm("Spieler " + name + " löschen?")) return;
  appData.players = appData.players.filter(p => p !== name); delete appData.debts[name];
  saveToLocalStorage(); renderPlayersConfig(); updateDashboard();
 }
-
 function renderPlayersConfig() {
- const container = document.getElementById('players-list-config'); if (appData.players.length === 0) { container.innerHTML = "<small>Keine Spieler.</small>"; return; }
- let html = "<ul>"; appData.players.forEach(p => { html += '<li style="display:flex; justify-content:space-between; align-items:center; margin:5px 0; background:#e9ecef; color:#212529; padding:8px; border-radius:4px; border:1px solid #ced4da;"><span>' + p + '</span><button class="secondary" style="width:auto; padding:2px 8px; margin:0;" onclick="removePlayer(\'' + p + '\')">X</button></li>'; });
+ const container = document.getElementById('players-list-config'); 
+ if (!container) return; // Sicherheits-Check, falls das Element nicht bereit ist
+ 
+ if (!appData.players || appData.players.length === 0) { 
+   container.innerHTML = "<small style='color:#6c757d; padding:10px; display:block;'>Keine Spieler registriert.</small>"; 
+   return; 
+ }
+ 
+ if (!appData.guestFlags) appData.guestFlags = {};
+ 
+ let html = "<ul style='list-style:none; padding:0; margin:0;'>"; 
+ appData.players.forEach(p => { 
+   // Prüfen, ob der Spieler ein Gast ist
+   let istGast = appData.guestFlags[p] === true;
+   
+   html += '<li style="display:flex; justify-content:space-between; align-items:center; margin:5px 0; background:#e9ecef; color:#212529; padding:8px; border-radius:4px; border:1px solid #ced4da;">';
+   html += '<span><b>' + p + '</b>' + (istGast ? ' <small style="color:#e50914;">(Gast)</small>' : '') + '</span>';
+   html += '<button class="secondary" style="width:auto; padding:2px 8px; margin:0; background:#dc3545; color:#fff; border-radius:4px;" onclick="removePlayer(\'' + p.replace(/'/g, "\\'") + '\')">X</button>';
+   html += '</li>'; 
+ });
  container.innerHTML = html + "</ul>";
 }
 
@@ -465,99 +525,172 @@ function createNewKW() {
  const inputEl = document.getElementById('new-kw-number'); const num = parseInt(inputEl.value); if (!num || num < 1 || num > 53) return alert("Ungültige KW!");
  const key = "KW" + num; if (appData.kws[key]) return alert("Existiert bereits!");
  appData.kws[key] = { status: "open", entries: {} };
+ 
+ // 1. Alle registrierten Stammspieler eintragen
  appData.players.forEach(p => { appData.kws[key].entries[p] = { drinks: {}, penalties: 0.0, absentPenalty: 2.0, isSingleBooked: false }; });
+ 
+ // 2. NEU: Einen flexiblen Gast-Eintrag NUR für diese Woche hinzufügen (ohne Anwesenheitsstrafe)
+ appData.kws[key].entries["_Gast / Neuer Spieler"] = { drinks: {}, penalties: 0.0, absentPenalty: 0.0, isSingleBooked: false };
+ 
  inputEl.value = num + 1; saveToLocalStorage(); populateKWSelects();
  document.getElementById('select-active-kw').value = key; loadKWDetails();
 }
 
-/* ANPASSUNG: Holt den Preis aus appData.drinks und zeigt ihn formatiert auf den Buttons an */
+
 function loadKWDetails() {
- const kwKey = document.getElementById('select-active-kw').value; const container = document.getElementById('kw-players-list');
+ const kwKey = document.getElementById('select-active-kw').value; const 
+container = document.getElementById('kw-players-list');
  if (!kwKey || !appData.kws[kwKey]) { container.innerHTML = ""; return; }
  const kwData = appData.kws[kwKey]; let html = "";
+ if (!appData.guestFlags) appData.guestFlags = {};
  appData.players.forEach((p, index) => {
- if (!kwData.entries[p]) kwData.entries[p] = { drinks: {}, penalties: 0, absentPenalty: 2.0, isSingleBooked: false };
- const entry = kwData.entries[p]; let dSum = []; let drinkCost = 0.0;
- for(let [dn, qty] of Object.entries(entry.drinks)) { if(qty > 0) { dSum.push(qty + "x " + dn); drinkCost += qty * (appData.drinks[dn] || 0.0); } }
- let totalLiveAmount = drinkCost + entry.penalties + entry.absentPenalty; const abgehakt = kwData.status === 'booked' || entry.isSingleBooked; const contentId = "player-content-" + index;
- html += '<div style="background:#f8f9fa; color:#212529; padding:0; margin-bottom:10px; border-radius:6px; border-left: 5px solid ' + (abgehakt?'#4caf50':(entry.absentPenalty>0?'#e50914':'#ff9800')) + '; overflow:hidden; border:1px solid #ced4da;">';
- html += '<div onclick="togglePlayerWindow(\'' + contentId + '\')" style="display:flex; justify-content:space-between; align-items:center; padding:12px; cursor:pointer; background:#e9ecef; color:#212529; user-select:none;"><b> ' + p + '</b>👤<span class="badge" style="background:' + (abgehakt?'#4caf50':(entry.absentPenalty>0?'#e50914':'#ff9800')) + '; color:#fff;">' + (abgehakt?'Bezahlt':(entry.absentPenalty>0?'Abwesend (2€)':'Im Training')) + '</span></div>';
+ let istGast = appData.guestFlags[p] === true;
  
-
-html += '<div id="' + contentId + '" class="player-fold-content" style="display:none; background-color: #dbe5f0 !important; padding: 15px !important; border-top: 3px solid #7ea3cc !important; border-bottom: 3px solid #7ea3cc !important;"><div style="margin-bottom:12px; font-size:0.95rem; color:#212529; line-height: 1.4; border-bottom: 1px dashed #7ea3cc; padding-bottom: 8px;"><b>Erfasst:</b> ' + (dSum.length > 0 ? dSum.join(', ') : 'Nichts') + '<br><b>Strafen:</b> ' + entry.penalties.toFixed(2) + '€ | <b style="font-size:1.05rem;">Betrag aktuell: <span style="color:#d9534f">' + totalLiveAmount.toFixed(2) + '€</span></b></div>';
-
-
-
-
-
+ if (!kwData.entries[p]) kwData.entries[p] = { drinks: {}, penalties: 0, 
+absentPenalty: istGast ? 0.0 : 2.0, isSingleBooked: false };
+ const entry = kwData.entries[p]; let dSum = []; let drinkCost = 0.0;
+ for(let [dn, qty] of Object.entries(entry.drinks)) { if(qty > 0) { 
+dSum.push(qty + "x " + dn); drinkCost += qty * (appData.drinks[dn] || 0.0); } }
+ let totalLiveAmount = drinkCost + entry.penalties + entry.absentPenalty; 
+const abgehakt = kwData.status === 'booked' || entry.isSingleBooked; const 
+contentId = "player-content-" + index;
+ 
+ let badgeText = abgehakt ? 'Bezahlt' : (entry.absentPenalty > 0 ? 'Abwesend (2€)' : (istGast ? 'Gast im Training' : 'Im Training'));
+ 
+ html += '<div style="background:#f8f9fa; color:#212529; padding:0; margin-bottom:10px; border-radius:6px; border-left: 5px solid ' + 
+ (abgehakt?'#4caf50':(entry.absentPenalty>0?'#e50914':'#ff9800')) + '; overflow:hidden; border:1px solid #ced4da;">';
+ 
+ // KORREKTUR: Verwende ein dreispaltiges CSS-Flex-Layout, um den Kassenstand mittig untereinander zu platzieren
+ html += '<div onclick="togglePlayerWindow(\'' + contentId + '\')" style="display:flex; justify-content:space-between; align-items:center; padding:12px; cursor:pointer; background:#e9ecef; color:#212529; user-select:none;">' +
+ '<div style="flex:1; text-align:left;"><b>' + p + (istGast ? ' (Gast)' : '') + '</b></div>' +
+ '<div style="flex:1; text-align:center; font-size:1.1rem;"><span style="background:#fff; border:1px solid #ced4da; padding:4px 10px; border-radius:4px; font-weight:bold; color:#d9534f;">' + totalLiveAmount.toFixed(2) + ' €</span></div>' +
+ '<div style="flex:1; text-align:right;"><span class="badge" style="background:' + (abgehakt?'#4caf50':(entry.absentPenalty>0?'#e50914':'#ff9800')) + '; color:#fff;">' + badgeText + '</span></div>' +
+ '</div>';
+ 
+ html += '<div id="' + contentId + '" class="player-fold-content" style="display:none; background-color: #dbe5f0 !important; padding: 15px !important; border-top: 3px solid #7ea3cc !important; border-bottom: 3px solid #7ea3cc !important;"><div style="margin-bottom:12px; font-size:0.95rem; color:#212529; line-height: 1.4; border-bottom: 1px dashed #7ea3cc; padding-bottom: 8px;"><b>Erfasst:</b> ' + (dSum.length > 0 ? dSum.join(', ') : 'Nichts') + '<br><b>Strafen:</b> ' + entry.penalties.toFixed(2) + '€ | <b style="font-size:1.05rem;">Betrag aktuell: <span style="color:#d9534f">' + totalLiveAmount.toFixed(2) + '€</span></b></div>';
  if (!abgehakt) {
  let priceU40 = appData.fineU40 !== undefined ? appData.fineU40 : 0.20; let priceVorbei = appData.fineVorbei !== undefined ? appData.fineVorbei : 0.30;
  html += '<div style="margin-bottom:10px; display:flex; align-items:center; gap:10px; background:#f1f3f5; padding:6px; border-radius:4px; border:1px solid #dee2e6;"><span style="font-size:0.85rem; color:#495057;">Anzahl für Klick:</span><input type="number" id="drink-qty-' + index + '" value="1" min="1" style="width:60px; text-align:center; padding:3px; margin:0; background:#fff; color:#212529; border:1px solid #ced4da; border-radius:4px; font-weight:bold;"></div>';
- 
-html += '<div class="drink-btn-grid" style="background-color: #cedcee !important; padding: 10px; border-radius: 6px; border: 1px solid #7ea3cc;">';
-
- 
- /* Hier wird der Preis ermittelt und formatiert hinter den Namen gehängt */
+ html += '<div class="drink-btn-grid" style="background-color: #cedcee !important; padding: 10px; border-radius: 6px; border: 1px solid #7ea3cc;">';
  for (let dName of Object.keys(appData.drinks)) { 
-   let currentPrice = Number(appData.drinks[dName] || 0).toFixed(2);
-   
-
-html += '<button class="drink-btn" style="background:#ffffff; color:#212529; border:1px solid #bdc3c7; font-weight: bold;" onclick="addMultipleDrinks(\'' + kwKey + '\',\'' + p + '\',\'' + dName + '\',' + index + ')">+ ' + dName + ' (' + currentPrice + ' €)</button>';
-}
-
- 
- html += '</div><div class="flex-row" style="margin-top:5px; flex-wrap:wrap;">';
-html += '<button class="secondary" style="font-size:1.15rem; padding:12px 10px; background:#e50914 !important; color:#ffffff !important; font-weight:bold; border:none; margin-bottom:5px;" onclick="resetSinglePlayerKWWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + index + ')"> !!!!! letzte Eingabe löschen !!!!! </button> ';
-
- html += '<button class="blue" style="font-size:0.75rem; padding:5px; max-width:105px;" onclick="closeCurrentPlayer()"> Schließen </button>❌';
- html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#6c757d;" onclick="addFineWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + priceU40 + ',' + index + ')"> U40 (+' + priceU40.toFixed(2) + '€)</button>🎯';
- html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#6c757d;" onclick="addFineWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + priceVorbei + ',' + index + ')"> Lusche (+' + priceVorbei.toFixed(2) + '€)</button>❌';
-html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#e50914 !important; color:#ffffff !important; font-weight:bold;" onclick="addSpielgeldWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + index + ')"> Extra Einwurfgeld (+2.00€)</button> ';
-
-
-
-
-
- html += '<button class="success" style="font-size:0.75rem; padding:5px; width:auto; flex:1;" onclick="bookSingle(\'' + kwKey + '\',\'' + p + '\')"> Einzeln & Bezahlt</button>💰';
- html += '</div>';
+ let currentPrice = Number(appData.drinks[dName] || 0).toFixed(2);
+ html += '<button class="drink-btn" style="background:#ffffff; color:#212529; border:1px solid #bdc3c7; font-weight: bold;" onclick="addMultipleDrinks(\'' + kwKey + '\',\'' + p + '\',\'' + dName + '\',' + index + ')">+ ' + dName + ' (' + currentPrice + ' €)</button>';
  }
+ html += '</div><div class="flex-row" style="margin-top:5px; flex-wrap:wrap;">';
+ html += '<button class="secondary" style="font-size:1.15rem; padding:12px 10px; background:#e50914 !important; color:#ffffff !important; font-weight:bold; border:none; margin-bottom:5px;" onclick="resetSinglePlayerKWWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + index + ')"> !!!!! letzte Eingabe löschen !!!!! </button> ';
+ html += '<button class="blue" style="font-size:0.75rem; padding:5px; max-width:105px;" onclick="closeCurrentPlayer()"> Schließen </button> ';
+ html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#6c757d;" onclick="addFineWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + priceU40 + ',' + index + ')"> U40 (+' + priceU40.toFixed(2) + '€)</button> ';
+ html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#6c757d;" onclick="addFineWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + priceVorbei + ',' + index + ')"> Lusche (+' + priceVorbei.toFixed(2) + '€)</button> ';
+ html += '<button class="secondary" style="font-size:0.75rem; padding:5px; flex:1; background:#e50914 !important; color:#ffffff !important; font-weight:bold;" onclick="addSpielgeldWithKeepOpen(\'' + kwKey + '\',\'' + p + '\',' + index + ')"> Extra Einwurfgeld (+2.00€)</button> ';
+ html += '<button class="success" style="font-size:0.75rem; padding:5px; width:auto; flex:1;" onclick="bookSingle(\'' + kwKey + '\',\'' + p + '\')"> Einzeln & Bezahlt</button> ';
+ html += '</div></div></div>';
+ } else {
  html += '</div></div>';
+ }
  });
  container.innerHTML = html;
 }
 
 
-
-
-
-
-
 function togglePlayerWindow(targetId) { 
-    document.querySelectorAll('.player-fold-content').forEach(el => {
-        if(el.id !== targetId) el.style.display = 'none'; 
-    }); 
-    const el = document.getElementById(targetId); 
-    if (el.style.display === 'block') {
-        el.style.display = 'none';
-    } else {
-        el.style.display = 'block';
-        // Hier erzwingen wir das neue Design direkt per JavaScript:
-        el.style.backgroundColor = '#dbe5f0'; // Ein deutlich sichtbares, schickes Graublau
-        el.style.padding = '15px';            // Mehr Abstand nach innen
-        el.style.borderTop = '3px solid #7ea3cc'; // Kräftiger Balken oben
-        el.style.borderBottom = '3px solid #7ea3cc'; // Kräftiger Balken unten
-    }
+ document.querySelectorAll('.player-fold-content').forEach(el => {
+ if(el.id !== targetId) el.style.display = 'none'; 
+ }); 
+ const el = document.getElementById(targetId); 
+ if (el.style.display === 'block') {
+ el.style.display = 'none';
+ } else {
+ el.style.display = 'block';
+ 
+ el.style.backgroundColor = '#e2ecf7'; 
+ el.style.padding = '18px'; 
+ el.style.margin = '5px 8px 12px 8px'; 
+ el.style.borderRadius = '8px';
+ el.style.borderTop = '1px solid #9fbcdb';
+ el.style.borderLeft = '1px solid #9fbcdb';
+ el.style.borderBottom = '2px solid #ffffff';
+ el.style.borderRight = '2px solid #ffffff';
+ el.style.boxShadow = 'inset 0 4px 10px rgba(0, 0, 0, 0.12), inset 0 1px 3px rgba(0, 0, 0, 0.2)';
+
+ setTimeout(() => {
+ el.querySelectorAll('.drink-btn, button.secondary, button.success, button.blue').forEach(btn => {
+ if (btn.classList.contains('drink-btn') || btn.style.background.includes('#ffffff') || btn.style.background.includes('rgb(255')) {
+ btn.style.background = 'linear-gradient(to bottom, #ffffff 0%, #e6ecf2 100%)';
+ btn.style.border = '1px solid #a3b8cc';
+ }
+ // Hellerer, dickerer 3D-Schatten für moderne Optik und bessere Sichtbarkeit
+ btn.style.boxShadow = '0 5px 0 #9cb2c9, 0 4px 6px rgba(0,0,0,0.15)';
+ btn.style.borderRadius = '8px';
+ btn.style.transition = 'all 0.05s ease';
+ 
+ // Drück-Effekt optimiert (senkt sich tiefer ab)
+ btn.onmousedown = () => {
+ btn.style.transform = 'translateY(4px)';
+ btn.style.boxShadow = '0 1px 0 #9cb2c9, 0 1px 2px rgba(0,0,0,0.2)';
+ };
+ btn.onmouseup = () => {
+ btn.style.transform = 'translateY(0px)';
+ btn.style.boxShadow = '0 5px 0 #9cb2c9, 0 4px 6px rgba(0,0,0,0.15)';
+ };
+ btn.onmouseleave = () => {
+ btn.style.transform = 'translateY(0px)';
+ btn.style.boxShadow = '0 5px 0 #9cb2c9, 0 4px 6px rgba(0,0,0,0.15)';
+ };
+ });
+ 
+ // Den auffälligen roten Lösch-Button wuchtiger machen
+ const deleteBtn = el.querySelector('button[onclick*="resetSinglePlayerKWWithKeepOpen"]');
+ if (deleteBtn) {
+ deleteBtn.style.background = 'linear-gradient(to bottom, #ff3b30 0%, #b31006 100%)';
+ deleteBtn.style.boxShadow = '0 5px 0 #730a03, 0 5px 6px rgba(0,0,0,0.3)';
+ deleteBtn.style.padding = '18px 10px';
+ deleteBtn.style.fontSize = '1.1rem';
+ deleteBtn.onmousedown = () => {
+ deleteBtn.style.transform = 'translateY(4px)';
+ deleteBtn.style.boxShadow = '0 1px 0 #730a03, 0 1px 2px rgba(0,0,0,0.3)';
+ };
+ deleteBtn.onmouseup = () => {
+ deleteBtn.style.transform = 'translateY(0px)';
+ deleteBtn.style.boxShadow = '0 5px 0 #730a03, 0 5px 6px rgba(0,0,0,0.3)';
+ };
+ }
+ }, 20);
+ }
 }
 
 
+// 1. Getränke-Button Anpassung
 function addMultipleDrinks(kw, p, dn, idx) {
  const qtyInput = document.getElementById('drink-qty-' + idx); let multiplier = parseInt(qtyInput.value); if (isNaN(multiplier) || multiplier < 1) multiplier = 1;
  if (!appData.actionHistory) appData.actionHistory = {}; if (!appData.actionHistory[p]) appData.actionHistory[p] = [];
  appData.actionHistory[p].push({ type: 'drink', data: dn, oldAbsentPenalty: appData.kws[kw].entries[p].absentPenalty, qty: multiplier });
  appData.kws[kw].entries[p].drinks[dn] = (appData.kws[kw].entries[p].drinks[dn] || 0) + multiplier;
  appData.kws[kw].entries[p].absentPenalty = 0.0; saveToLocalStorage(); loadKWDetails();
- document.getElementById('player-content-' + idx).style.display = 'block';
+ 
+ // NEU: Feld nach Klick sofort schließen
+ closeCurrentPlayer();
 }
+
+// 2. U40 / Luschen-Button Anpassung
+function addFineWithKeepOpen(kw, p, amt, idx) {
+ if (!appData.actionHistory) appData.actionHistory = {}; if (!appData.actionHistory[p]) appData.actionHistory[p] = [];
+ appData.actionHistory[p].push({ type: 'fine', data: amt, oldAbsentPenalty: appData.kws[kw].entries[p].absentPenalty });
+ appData.kws[kw].entries[p].penalties += amt; appData.kws[kw].entries[p].absentPenalty = 0.0; saveToLocalStorage(); loadKWDetails();
+ 
+ // NEU: Feld nach Klick sofort schließen
+ closeCurrentPlayer();
+}
+
+// 3. Extra Einwurfgeld-Button Anpassung
+function addSpielgeldWithKeepOpen(kw, p, idx) {
+ if (!appData.actionHistory) appData.actionHistory = {}; if (!appData.actionHistory[p]) appData.actionHistory[p] = [];
+ appData.actionHistory[p].push({ type: 'fine', data: 2.00, oldAbsentPenalty: appData.kws[kw].entries[p].absentPenalty });
+ appData.kws[kw].entries[p].penalties += 2.00; appData.kws[kw].entries[p].absentPenalty = 0.0; saveToLocalStorage(); loadKWDetails();
+ 
+ // NEU: Feld nach Klick sofort schließen
+ closeCurrentPlayer();
+}
+
 
 function addFineWithKeepOpen(kw, p, amt, idx) {
  if (!appData.actionHistory) appData.actionHistory = {}; if (!appData.actionHistory[p]) appData.actionHistory[p] = [];
@@ -589,6 +722,7 @@ function addSpielgeldWithKeepOpen(kw, p, idx) {
 
 
 
+// 4. Letzte Eingabe löschen (Der rote Balken)
 function resetSinglePlayerKWWithKeepOpen(kw, p, idx) {
  if (!appData.actionHistory || !appData.actionHistory[p] || appData.actionHistory[p].length === 0) { return alert("Keine Aktionen zum Rückgängigmachen gefunden!"); }
  const last = appData.actionHistory[p].pop(); const entry = appData.kws[kw].entries[p];
@@ -596,8 +730,35 @@ function resetSinglePlayerKWWithKeepOpen(kw, p, idx) {
  else if (last.type === 'fine') { entry.penalties = Math.max(0, entry.penalties - last.data); }
  let hatNochWas = (entry.penalties > 0.01); for (let qty of Object.values(entry.drinks)) { if (qty > 0) hatNochWas = true; }
  if (!hatNochWas) { entry.absentPenalty = 2.0; } else { entry.absentPenalty = last.oldAbsentPenalty; }
- saveToLocalStorage(); loadKWDetails(); document.getElementById('player-content-' + idx).style.display = 'block';
+ saveToLocalStorage(); loadKWDetails(); 
+ 
+ // NEU: Feld nach dem Löschen sofort einklappen
+ closeCurrentPlayer();
 }
+
+// 5. Einzeln & Bezahlt (Der grüne Button rechts unten)
+function bookSingle(kw, p) {
+ const entry = appData.kws[kw].entries[p]; if (entry.isSingleBooked) return;
+ let dc = 0.0; for (let [dn, qty] of Object.entries(entry.drinks)) { dc += qty * (appData.drinks[dn] || 0.0); }
+ let df = entry.penalties + entry.absentPenalty; let gesamtBetrag = dc + df;
+ 
+ let anzeigeName = p;
+ if (appData.guestFlags && appData.guestFlags[p] === true) {
+   // Wenn es ein registrierter Gast ist, direkt buchen
+   anzeigeName = "Gast: " + p;
+ } else {
+   if (!confirm(p + " hat Bar bezahlt? \n\nBetrag: " + gesamtBetrag.toFixed(2) + "€")) return;
+ }
+
+ appData.kassen.heim += dc; appData.kassen.dart += df; if (appData.debts[p] === undefined) appData.debts[p] = 0.0;
+ pushToGlobalHistory('trainingsabrechnung', anzeigeName, gesamtBetrag, { kwKey: kw, drinkCost: dc, fineCost: df });
+ 
+ entry.isSingleBooked = true; saveToLocalStorage(); loadKWDetails(); updateDashboard();
+ 
+ // NEU: Nach erfolgreicher Bar-Abrechnung das Feld sofort einklappen
+ closeCurrentPlayer();
+}
+
 
 function closeCurrentPlayer() { document.querySelectorAll('.player-fold-content').forEach(el => el.style.display = 'none'); }
 
@@ -621,17 +782,34 @@ function pushToGlobalHistory(typ, spieler, betrag, extraData = null) {
 
 
 function bookSingle(kw, p) {
- const entry = appData.kws[kw].entries[p]; if (entry.isSingleBooked) return;
- let dc = 0.0; for (let [dn, qty] of Object.entries(entry.drinks)) { dc += qty * (appData.drinks[dn] || 0.0); }
- let df = entry.penalties + entry.absentPenalty; let gesamtBetrag = dc + df; if (!confirm(p + " hat Bar bezahlt? \n\nBetrag: " + gesamtBetrag.toFixed(2) + "€")) return;
- appData.kassen.heim += dc; appData.kassen.dart += df; if (appData.debts[p] === undefined) appData.debts[p] = 0.0;
- pushToGlobalHistory('trainingsabrechnung', p, gesamtBetrag, { kwKey: kw, drinkCost: dc, fineCost: df });
- entry.isSingleBooked = true; saveToLocalStorage(); loadKWDetails(); updateDashboard();
+  const entry = appData.kws[kw].entries[p]; if (entry.isSingleBooked) return;
+  let dc = 0.0; for (let [dn, qty] of Object.entries(entry.drinks)) { dc += qty * (appData.drinks[dn] || 0.0); }
+  let df = entry.penalties + entry.absentPenalty; let gesamtBetrag = dc + df;
+  
+  // NEU: Wenn es der Gast-Eintrag ist, nach dem echten Namen fragen
+  let anzeigeName = p;
+  if (p === "_Gast / Neuer Spieler") {
+    let gastName = prompt(`Gast-Abrechnung über ${gesamtBetrag.toFixed(2)}€.\nBitte gib den Namen des Gastes ein:`, "Gast");
+    if (gastName === null) return; // Abbrechen, falls Abgebrochen geklickt wurde
+    let gepflegterName = gastName.trim();
+    anzeigeName = gepflegterName ? "Gast: " + gepflegterName : "Gastspieler";
+  } else {
+    if (!confirm(p + " hat Bar bezahlt? \n\nBetrag: " + gesamtBetrag.toFixed(2) + "€")) return;
+  }
+
+  appData.kassen.heim += dc; appData.kassen.dart += df; if (appData.debts[p] === undefined) appData.debts[p] = 0.0;
+  
+  // Hier wird nun der eingegebene Name für das Protokoll und die Historie genutzt
+  pushToGlobalHistory('trainingsabrechnung', anzeigeName, gesamtBetrag, { kwKey: kw, drinkCost: dc, fineCost: df });
+  
+  entry.isSingleBooked = true; saveToLocalStorage(); loadKWDetails(); updateDashboard();
 }
 
 function finalBookKW() {
  const kw = document.getElementById('select-active-kw').value; if (!kw || appData.kws[kw].status === 'booked' || !confirm(kw + " komplett abrechnen?")) return;
  let abgerechneteSpieler = [];
+ if (!appData.guestFlags) appData.guestFlags = {};
+ 
  for (let [p, entry] of Object.entries(appData.kws[kw].entries)) { 
    if (!entry.isSingleBooked) { 
      let dc = 0.0; for (let [dn, qty] of Object.entries(entry.drinks)) { dc += qty * (appData.drinks[dn] || 0.0); } 
@@ -640,12 +818,22 @@ function finalBookKW() {
      abgerechneteSpieler.push({ player: p, dc: dc, df: df });
    } 
  }
+ 
  pushToGlobalHistory('kw_gesamtabrechnung', kw, 0, { spielerListe: abgerechneteSpieler });
- appData.kws[kw].status = 'booked'; saveToLocalStorage(); populateKWSelects(); loadKWDetails(); updateDashboard();
+ appData.kws[kw].status = 'booked';
+ 
+ // SICHERHEITS-CHECK: Nur Spieler löschen, bei denen das Gast-Häkchen EINDEUTIG auf "true" steht
+ appData.players = appData.players.filter(p => {
+   if (appData.guestFlags && appData.guestFlags[p] === true) {
+     delete appData.debts[p];
+     delete appData.guestFlags[p];
+     return false; // Nur der Gast fliegt raus
+   }
+   return true; // Alle Stammspieler (auch ohne gesetztes Flag) bleiben sicher drin!
+ });
+ 
+ saveToLocalStorage(); populateKWSelects(); loadKWDetails(); updateDashboard();
 }
-
-
-
 
 
 
@@ -774,16 +962,33 @@ function updateDashboard() {
  }
  
  let logHtml = '<div class="card" style="margin-top:20px; background:#fff; border:1px solid #ced4da; color:#212529;"><h3>📋 Letzte Buchungen (Protokoll)</h3><div style="max-height:200px; overflow-y:auto; font-size:0.85rem;">';
- if (appData.globalActionHistory && appData.globalActionHistory.length > 0) {
+if (appData.globalActionHistory && appData.globalActionHistory.length > 0) {
  [...appData.globalActionHistory].reverse().forEach(act => {
- // Nutzt den gespeicherten Zeitstempel (oder ein Fallback für Altdaten)
  let anzeigeZeit = act.timestamp ? act.timestamp : "??.??.???? - --:--";
- let farbe = act.type === 'bezahlen' || act.type === 'einzelwoche_bezahlt' ? '#28a745' : (act.type === 'loeschen' || act.type === 'einzelwoche_geloescht' ? '#dc3545' : '#007aff');
+ 
+ // KORREKTUR: Bestimmt die Textfarbe basierend auf dem Buchungstyp
+ let farbe = '#007aff'; // Blau als Standard
+ if (act.type === 'bezahlen' || act.type === 'einzelwoche_bezahlt') farbe = '#28a745'; // Grün
+ if (act.type === 'loeschen' || act.type === 'einzelwoche_geloescht') farbe = '#dc3545'; // Rot
+ 
+ // KORREKTUR: Bei manuellen Buchungen nutzen wir die richtige Farbe für den Betrag
+ if (act.type === 'manuell' && act.amount < 0) farbe = '#dc3545';
+ if (act.type === 'manuell' && act.amount > 0) farbe = '#28a745';
+
+ // NEU: Zeigt den echten Euro-Betrag an, anstatt stur "Abrechnung" zu schreiben
+ let betragText = (act.type === 'kw_gesamtabrechnung' || act.type === 'trainingsabrechnung') 
+ ? 'Abrechnung' 
+ : act.amount.toFixed(2) + ' €';
+
  logHtml += '<div style="border-bottom:1px solid #eee; padding:5px 0; display:flex; justify-content:space-between;">' +
  '<span> ' + anzeigeZeit + ' Uhr - <b>' + act.player + '</b> (' + act.type.toUpperCase() + ')</span>' +
- '<span style="color:' + farbe + '; font-weight:bold;">' + (act.amount > 0 ? act.amount.toFixed(2) + ' €' : 'Abrechnung') + '</span></div>';
+ '<span style="color:' + farbe + '; font-weight:bold;">' + betragText + '</span></div>';
  });
- } else { logHtml += '<p style="color:#6c757d; text-align:center; padding:10px 0;">Noch keine Buchungen durchgeführt.</p>'; }
+}
+
+
+
+else { logHtml += '<p style="color:#6c757d; text-align:center; padding:10px 0;">Noch keine Buchungen durchgeführt.</p>'; }
 
  logHtml += '</div></div>';
  html += logHtml;
