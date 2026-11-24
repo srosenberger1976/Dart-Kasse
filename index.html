@@ -329,6 +329,24 @@ async function triggerPWAInstallation() {
 
  </div>
  <button class="blue" onclick="exportDataToClipboard()"> Daten 📤 exportieren (kopieren)</button>
+
+ <div style="margin-top: 15px; padding-top: 15px; border-top: 2px dashed #ced4da;">
+  <h4 style="border:none; margin-bottom:5px;">☁️ GitHub Cloud-Sync</h4>
+  <p style="font-size:0.8rem; color:#495057; margin-bottom:8px;">Speichert den Stand automatisch bei GitHub für andere Geräte.</p>
+  <input type="text" id="gh-user" placeholder="GitHub Benutzername (z.B. MaxMustermann)">
+  <input type="text" id="gh-repo" placeholder="Repository Name (z.B. dart-kasse)">
+  <input type="password" id="gh-token" placeholder="GitHub Token (github_pat_...)">
+  <div class="flex-row" style="margin-top:5px;">
+   <button class="success" onclick="saveGitHubConfig()">Zugang speichern</button>
+   <button class="blue" onclick="syncFromGitHub(true)">Jetzt laden ⬇️</button>
+  </div>
+  <small id="gh-sync-status" style="display:block; margin-top:5px; color:#495057; font-weight:bold;"></small>
+ </div>
+
+
+
+
+
  <p style="font-size:0.85rem; color:#495057; margin-top:5px;">Backup-Text unten einfügen:</p>
  <textarea id="import-text-area" rows="2" placeholder="Text einfügen..." oninput="checkImportText()"></textarea>
  <button class="success" id="btn-import-execute" onclick="importDataFromText()" disabled> Backup einlesen 📥 </button>
@@ -362,10 +380,144 @@ document.addEventListener("DOMContentLoaded", () => {
    tsBox.innerText = "ℹ️ Zuletzt geladener Stand vom: " + savedTimestamp;
    tsBox.style.display = "block";
  }
+ if (document.getElementById('gh-user')) {
+  document.getElementById('gh-user').value = localStorage.getItem('gh_user') || '';
+  document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || '';
+  document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
+ }
  switchTab('tab-dashboard');
+ syncFromGitHub(false);
 });
 
-function saveToLocalStorage() { localStorage.setItem('dart_app_data', JSON.stringify(appData)); }
+
+
+
+
+
+
+let ghSyncTimer = null;
+function saveToLocalStorage() { 
+ localStorage.setItem('dart_app_data', JSON.stringify(appData)); 
+ clearTimeout(ghSyncTimer);
+ ghSyncTimer = setTimeout(() => { syncToGitHub(); }, 1500);
+}
+
+function saveGitHubConfig() {
+ localStorage.setItem('gh_user', document.getElementById('gh-user').value.trim());
+ localStorage.setItem('gh_repo', document.getElementById('gh-repo').value.trim());
+ localStorage.setItem('gh_token', document.getElementById('gh-token').value.trim());
+ alert("GitHub-Zugangsdaten auf diesem Gerät gespeichert!");
+ syncToGitHub();
+}
+
+async function syncToGitHub() {
+ const user = localStorage.getItem('gh_user');
+ const repo = localStorage.getItem('gh_repo');
+ const token = localStorage.getItem('gh_token');
+ if (!user || !repo || !token) return;
+
+ const statusEl = document.getElementById('gh-sync-status');
+ if (statusEl) statusEl.innerText = "⏳ Speichere in GitHub...";
+
+ const url = `https://github.com{user}/${repo}/contents/kassendaten.json`;
+ try {
+  let sha = null;
+  const getRes = await fetch(url + "?t=" + Date.now(), {
+   headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+  });
+  if (getRes.ok) {
+   const fileData = await getRes.json();
+   sha = fileData.sha;
+  }
+
+  const jetzt = new Date();
+  const timestampFull = jetzt.toLocaleDateString('de-DE') + ", " + jetzt.toLocaleTimeString('de-DE') + " Uhr";
+  const exportPaket = { metaDatum: timestampFull, payload: appData };
+  const jsonString = JSON.stringify(exportPaket, null, 2);
+  const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
+
+  const bodyData = {
+   message: "Auto-Sync Dart-Kasse " + timestampFull,
+   content: base64Content
+  };
+  if (sha) bodyData.sha = sha;
+
+  const putRes = await fetch(url, {
+   method: 'PUT',
+   headers: {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+   },
+   body: JSON.stringify(bodyData)
+  });
+
+  if (putRes.ok && statusEl) {
+   statusEl.innerText = "✅ Gespeichert (" + timestampFull + ")";
+  } else if (statusEl) {
+   statusEl.innerText = "❌ Fehler beim Speichern (Token/Name prüfen)";
+  }
+ } catch (e) {
+  if (statusEl) statusEl.innerText = "❌ Keine Internetverbindung für Sync";
+ }
+}
+
+async function syncFromGitHub(manualAlert) {
+ const user = localStorage.getItem('gh_user');
+ const repo = localStorage.getItem('gh_repo');
+ const token = localStorage.getItem('gh_token');
+ if (!user || !repo || !token) {
+  if (manualAlert) alert("Bitte erst GitHub-Daten eintragen und speichern!");
+  return;
+ }
+
+ const statusEl = document.getElementById('gh-sync-status');
+ if (statusEl) statusEl.innerText = "⏳ Lade Stand von GitHub...";
+
+ const url = `https://github.com{user}/${repo}/contents/kassendaten.json?t=` + Date.now();
+ try {
+  const res = await fetch(url, {
+   headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+  });
+  if (!res.ok) {
+   if (statusEl) statusEl.innerText = "ℹ️ Noch keine Cloud-Datei vorhanden.";
+   if (manualAlert) alert("Noch keine Datei auf GitHub gefunden.");
+   return;
+  }
+  const fileData = await res.json();
+  const decodedJson = decodeURIComponent(escape(atob(fileData.content)));
+  const daten = JSON.parse(decodedJson);
+
+  if (daten.payload) {
+   appData = daten.payload;
+   localStorage.setItem('dart_app_data', JSON.stringify(appData));
+   if (daten.metaDatum) {
+    localStorage.setItem('dart_app_json_time', daten.metaDatum);
+    const tsBox = document.getElementById('backup-timestamp-box');
+    if (tsBox) {
+     tsBox.innerText = " ☁️ Cloud-Stand vom: " + daten.metaDatum;
+     tsBox.style.display = "block";
+    }
+   }
+   updateDashboard();
+   if (statusEl) statusEl.innerText = "✅ Aktuell (" + (daten.metaDatum || "") + ")";
+   if (manualAlert) alert("Aktueller Stand erfolgreich von GitHub geladen! 🎉");
+  }
+ } catch (e) {
+  if (statusEl) statusEl.innerText = "❌ Fehler beim Laden";
+  if (manualAlert) alert("Fehler beim Laden von GitHub.");
+ }
+}
+
+
+
+
+
+
+
+
+
+
 
 function loadFromLocalStorage() {
  const raw = localStorage.getItem('dart_app_data');
