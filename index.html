@@ -419,7 +419,7 @@ async function syncToGitHub() {
  const statusEl = document.getElementById('gh-sync-status');
  if (statusEl) statusEl.innerText = "⏳ Speichere in GitHub...";
 
- const url = `https://github.com{user}/${repo}/contents/kassendaten.json`;
+ const url = github.com{repo}/contents/kassendaten.json;
  try {
   let sha = null;
   const getRes = await fetch(url + "?t=" + Date.now(), {
@@ -474,7 +474,7 @@ async function syncFromGitHub(manualAlert) {
  const statusEl = document.getElementById('gh-sync-status');
  if (statusEl) statusEl.innerText = "⏳ Lade Stand von GitHub...";
 
- const url = `https://github.com{user}/${repo}/contents/kassendaten.json?t=` + Date.now();
+const url = github.com{repo}/contents/kassendaten.json?t= + Date.now();
  try {
   const res = await fetch(url, {
    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
