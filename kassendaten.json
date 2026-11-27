@@ -1,5 +1,5 @@
 {
-  "metaDatum": "27.11.2026, 18:53:00 Uhr",
+  "metaDatum": "27.11.2026, 18:54:43 Uhr",
   "payload": {
     "players": [
       "Gaul, Jannik",
@@ -29,7 +29,7 @@
     "debts": {
       "Gaul, Jannik": 6,
       "Rosenberger, Stefan": 0,
-      "Raab, Jens": 2,
+      "Raab, Jens": 0,
       "Rosenberger, David": 0,
       "Tamas, Christian": 4,
       "Naumann, Stefan": 22,
@@ -10047,7 +10047,7 @@
     "lastPayments": {
       "Rosenberger, Stefan": 68,
       "Rosenberger, David": 72,
-      "Raab, Jens": 10,
+      "Raab, Jens": 2,
       "Naumann, Stefan": 10,
       "Schüssler, Frank": 20,
       "Tamas, Christian": 24,
