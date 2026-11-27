@@ -403,11 +403,17 @@ function saveToLocalStorage() {
 }
 
 function saveGitHubConfig() {
- localStorage.setItem('gh_user', document.getElementById('gh-user').value.trim());
- localStorage.setItem('gh_repo', document.getElementById('gh-repo').value.trim());
- localStorage.setItem('gh_token', document.getElementById('gh-token').value.trim());
- alert("GitHub-Zugangsdaten auf diesem Gerät gespeichert!");
- syncToGitHub();
+  const cleanUser = document.getElementById('gh-user').value.trim();
+  const cleanRepo = document.getElementById('gh-repo').value.trim();
+  const cleanToken = document.getElementById('gh-token').value.replace(/[^a-zA-Z0-9_]/g, '');
+  
+  localStorage.setItem('gh_user', cleanUser);
+  localStorage.setItem('gh_repo', cleanRepo);
+  localStorage.setItem('gh_token', cleanToken);
+  document.getElementById('gh-token').value = cleanToken;
+  
+  alert("GitHub-Zugangsdaten bereinigt und gespeichert!");
+  syncToGitHub();
 }
 
 async function syncToGitHub() {
@@ -418,13 +424,13 @@ async function syncToGitHub() {
   const statusEl = document.getElementById('gh-sync-status');
   if (statusEl) statusEl.innerText = "⏳ Speichere in GitHub...";
   
-  const url = "https://api." + "://github.com" + user + "/" + repo + "/contents/kassendaten.json";
+  const url = ["https://api", "github.com", "repos", user, repo, "contents", "kassendaten.json"].join("/").replace("api/", "api.");
   
   try {
     let sha = null;
     const getRes = await fetch(url + "?t=" + Date.now(), {
       headers: { 
-        'Authorization': 'Bearer ' + token, 
+        'Authorization': 'token ' + token, 
         'Accept': 'application/vnd.github+json' 
       }
     });
@@ -445,7 +451,7 @@ async function syncToGitHub() {
     const putRes = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Authorization': 'Bearer ' + token,
+        'Authorization': 'token ' + token,
         'Accept': 'application/vnd.github+json',
         'Content-Type': 'application/json'
       },
@@ -472,15 +478,16 @@ async function syncFromGitHub(manualAlert) {
   const statusEl = document.getElementById('gh-sync-status');
   if (statusEl) statusEl.innerText = "⏳ Lade Stand von GitHub...";
   
-  const url = "https://api." + "://github.com" + user + "/" + repo + "/contents/kassendaten.json?t=" + Date.now();
+  const url = ["https://api", "github.com", "repos", user, repo, "contents", "kassendaten.json"].join("/").replace("api/", "api.") + "?t=" + Date.now();
   
   try {
     const res = await fetch(url, {
       headers: { 
-        'Authorization': 'Bearer ' + token, 
+        'Authorization': 'token ' + token, 
         'Accept': 'application/vnd.github+json' 
       }
     });
+
     if (!res.ok) {
       if (statusEl) statusEl.innerText = "ℹ️ GitHub Status: " + res.status;
       if (manualAlert) alert("GitHub Antwort: Status " + res.status + "\n(404 = Datei noch nicht da, 401 = Token falsch, 403 = Rechte fehlen)");
