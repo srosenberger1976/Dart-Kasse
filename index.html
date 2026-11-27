@@ -411,107 +411,104 @@ function saveGitHubConfig() {
 }
 
 async function syncToGitHub() {
- const user = localStorage.getItem('gh_user');
- const repo = localStorage.getItem('gh_repo');
- const token = localStorage.getItem('gh_token');
- if (!user || !repo || !token) return;
-
- const statusEl = document.getElementById('gh-sync-status');
- if (statusEl) statusEl.innerText = "⏳ Speichere in GitHub...";
-
-const url = "https://api." + "://github.com" + user + "/" + repo + "/contents/kassendaten.json";
-
- try {
-  let sha = null;
-  const getRes = await fetch(url + "?t=" + Date.now(), {
-   headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
-  });
-  if (getRes.ok) {
-   const fileData = await getRes.json();
-   sha = fileData.sha;
+  const user = localStorage.getItem('gh_user');
+  const repo = localStorage.getItem('gh_repo');
+  const token = localStorage.getItem('gh_token');
+  if (!user || !repo || !token) return;
+  const statusEl = document.getElementById('gh-sync-status');
+  if (statusEl) statusEl.innerText = "⏳ Speichere in GitHub...";
+  
+  const url = "https://api." + "://github.com" + user + "/" + repo + "/contents/kassendaten.json";
+  
+  try {
+    let sha = null;
+    const getRes = await fetch(url + "?t=" + Date.now(), {
+      headers: { 
+        'Authorization': 'Bearer ' + token, 
+        'Accept': 'application/vnd.github+json' 
+      }
+    });
+    if (getRes.ok) {
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    }
+    const jetzt = new Date();
+    const timestampFull = jetzt.toLocaleDateString('de-DE') + ", " + jetzt.toLocaleTimeString('de-DE') + " Uhr";
+    const exportPaket = { metaDatum: timestampFull, payload: appData };
+    const jsonString = JSON.stringify(exportPaket, null, 2);
+    const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
+    const bodyData = {
+      message: "Auto-Sync Dart-Kasse " + timestampFull,
+      content: base64Content
+    };
+    if (sha) bodyData.sha = sha;
+    const putRes = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(bodyData)
+    });
+    if (putRes.ok && statusEl) {
+      statusEl.innerText = "✅ Gespeichert (" + timestampFull + ")";
+    } else if (statusEl) {
+      statusEl.innerText = "❌ Speicher-Fehler Status: " + putRes.status;
+    }
+  } catch (e) {
+    if (statusEl) statusEl.innerText = "❌ Speicher-Abbruch: " + e.message;
   }
-
-  const jetzt = new Date();
-  const timestampFull = jetzt.toLocaleDateString('de-DE') + ", " + jetzt.toLocaleTimeString('de-DE') + " Uhr";
-  const exportPaket = { metaDatum: timestampFull, payload: appData };
-  const jsonString = JSON.stringify(exportPaket, null, 2);
-  const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
-
-  const bodyData = {
-   message: "Auto-Sync Dart-Kasse " + timestampFull,
-   content: base64Content
-  };
-  if (sha) bodyData.sha = sha;
-
-  const putRes = await fetch(url, {
-   method: 'PUT',
-   headers: {
-    'Authorization': `Bearer ${token}`,
-    'Accept': 'application/vnd.github+json',
-    'Content-Type': 'application/json'
-   },
-   body: JSON.stringify(bodyData)
-  });
-
-  if (putRes.ok && statusEl) {
-   statusEl.innerText = "✅ Gespeichert (" + timestampFull + ")";
-  } else if (statusEl) {
-   statusEl.innerText = "❌ Fehler beim Speichern (Token/Name prüfen)";
-  }
- } catch (e) {
-  if (statusEl) statusEl.innerText = "❌ Keine Internetverbindung für Sync";
- }
 }
 
 async function syncFromGitHub(manualAlert) {
- const user = localStorage.getItem('gh_user');
- const repo = localStorage.getItem('gh_repo');
- const token = localStorage.getItem('gh_token');
- if (!user || !repo || !token) {
-  if (manualAlert) alert("Bitte erst GitHub-Daten eintragen und speichern!");
-  return;
- }
-
- const statusEl = document.getElementById('gh-sync-status');
- if (statusEl) statusEl.innerText = "⏳ Lade Stand von GitHub...";
-
-const url = "https://api." + "://github.com" + user + "/" + repo + "/contents/kassendaten.json?t=" + Date.now();
-
- try {
-  const res = await fetch(url, {
-   headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
-  });
-  if (!res.ok) {
-   if (statusEl) statusEl.innerText = "ℹ️ Noch keine Cloud-Datei vorhanden.";
-   if (manualAlert) alert("Noch keine Datei auf GitHub gefunden.");
-   return;
+  const user = localStorage.getItem('gh_user');
+  const repo = localStorage.getItem('gh_repo');
+  const token = localStorage.getItem('gh_token');
+  if (!user || !repo || !token) {
+    if (manualAlert) alert("Bitte erst GitHub-Daten eintragen und speichern!");
+    return;
   }
-  const fileData = await res.json();
-  const decodedJson = decodeURIComponent(escape(atob(fileData.content)));
-  const daten = JSON.parse(decodedJson);
-
-  if (daten.payload) {
-   appData = daten.payload;
-   localStorage.setItem('dart_app_data', JSON.stringify(appData));
-   if (daten.metaDatum) {
-    localStorage.setItem('dart_app_json_time', daten.metaDatum);
-    const tsBox = document.getElementById('backup-timestamp-box');
-    if (tsBox) {
-     tsBox.innerText = " ☁️ Cloud-Stand vom: " + daten.metaDatum;
-     tsBox.style.display = "block";
+  const statusEl = document.getElementById('gh-sync-status');
+  if (statusEl) statusEl.innerText = "⏳ Lade Stand von GitHub...";
+  
+  const url = "https://api." + "://github.com" + user + "/" + repo + "/contents/kassendaten.json?t=" + Date.now();
+  
+  try {
+    const res = await fetch(url, {
+      headers: { 
+        'Authorization': 'Bearer ' + token, 
+        'Accept': 'application/vnd.github+json' 
+      }
+    });
+    if (!res.ok) {
+      if (statusEl) statusEl.innerText = "ℹ️ GitHub Status: " + res.status;
+      if (manualAlert) alert("GitHub Antwort: Status " + res.status + "\n(404 = Datei noch nicht da, 401 = Token falsch, 403 = Rechte fehlen)");
+      return;
     }
-   }
-   updateDashboard();
-   if (statusEl) statusEl.innerText = "✅ Aktuell (" + (daten.metaDatum || "") + ")";
-   if (manualAlert) alert("Aktueller Stand erfolgreich von GitHub geladen! 🎉");
+    const fileData = await res.json();
+    const decodedJson = decodeURIComponent(escape(atob(fileData.content)));
+    const daten = JSON.parse(decodedJson);
+    if (daten.payload) {
+      appData = daten.payload;
+      localStorage.setItem('dart_app_data', JSON.stringify(appData));
+      if (daten.metaDatum) {
+        localStorage.setItem('dart_app_json_time', daten.metaDatum);
+        const tsBox = document.getElementById('backup-timestamp-box');
+        if (tsBox) {
+          tsBox.innerText = "☁ Cloud-Stand vom: " + daten.metaDatum;
+          tsBox.style.display = "block";
+        }
+      }
+      updateDashboard();
+      if (statusEl) statusEl.innerText = "✅ Aktuell (" + (daten.metaDatum || "") + ")";
+      if (manualAlert) alert("Aktueller Stand erfolgreich von GitHub geladen! 🎉");
+    }
+  } catch (e) {
+    if (statusEl) statusEl.innerText = "❌ Lade-Abbruch: " + e.message;
+    if (manualAlert) alert("Technischer Fehler: " + e.message + "\n\nZiel-URL:\n" + url);
   }
- } catch (e) {
-  if (statusEl) statusEl.innerText = "❌ Fehler beim Laden";
-  if (manualAlert) alert("Fehler beim Laden von GitHub.");
- }
 }
-
-
 
 
 
