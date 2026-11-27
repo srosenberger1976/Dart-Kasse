@@ -1,5 +1,5 @@
 {
-  "metaDatum": "28.11.2026, 00:29:18 Uhr",
+  "metaDatum": "28.11.2026, 00:29:59 Uhr",
   "payload": {
     "players": [
       "Gaul, Jannik",
@@ -23,7 +23,7 @@
       "Einwurfgeld": 0
     },
     "kassen": {
-      "dart": 943.9000000000001,
+      "dart": 863.9000000000001,
       "heim": 22
     },
     "debts": {
@@ -9708,6 +9708,13 @@
         "amount": -62,
         "extra": null,
         "timestamp": "27.11.2026 - 16:16"
+      },
+      {
+        "type": "manuell",
+        "player": "Dartkasse [-] (Automat November)",
+        "amount": -80,
+        "extra": null,
+        "timestamp": "28.11.2026 - 00:29"
       }
     ],
     "actionHistory": {
