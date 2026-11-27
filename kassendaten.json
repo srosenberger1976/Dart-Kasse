@@ -1,0 +1,19 @@
+{
+  "metaDatum": "27.11.2026, 17:28:59 Uhr",
+  "payload": {
+    "players": [],
+    "drinks": {
+      "Bier": 2.5,
+      "Cola": 2,
+      "Wasser": 1.5
+    },
+    "kassen": {
+      "dart": 0,
+      "heim": 0
+    },
+    "debts": {},
+    "kws": {},
+    "fineU40": 0.2,
+    "fineVorbei": 0.3
+  }
+}
