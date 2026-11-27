@@ -1,5 +1,5 @@
 {
-  "metaDatum": "27.11.2026, 18:55:52 Uhr",
+  "metaDatum": "27.11.2026, 23:10:10 Uhr",
   "payload": {
     "players": [
       "Gaul, Jannik",
@@ -33,7 +33,7 @@
       "Rosenberger, David": 0,
       "Tamas, Christian": 4,
       "Naumann, Stefan": 22,
-      "Röder, Andreas": 44,
+      "Röder, Andreas": 0,
       "Paul, Thorsten": 0,
       "Paul, Cedric": 0,
       "Blos, Robin": 0,
@@ -10054,7 +10054,8 @@
       "Gaul, Jannik": 24,
       "Paul, Thorsten": 40,
       "Paul, Cedric": 58,
-      "Blos, Robin": 54
+      "Blos, Robin": 54,
+      "Röder, Andreas": 44
     },
     "guestFlags": {
       "Brang, Bernhard": true
