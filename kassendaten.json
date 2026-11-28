@@ -1,5 +1,5 @@
 {
-  "metaDatum": "28.11.2026, 08:14:53 Uhr",
+  "metaDatum": "28.11.2026, 08:19:28 Uhr",
   "payload": {
     "players": [
       "Gaul, Jannik",
@@ -23,7 +23,7 @@
       "Einwurfgeld": 0
     },
     "kassen": {
-      "dart": 863.9000000000001,
+      "dart": 315.4000000000001,
       "heim": 22
     },
     "debts": {
@@ -9715,6 +9715,13 @@
         "amount": -80,
         "extra": null,
         "timestamp": "28.11.2026 - 08:14"
+      },
+      {
+        "type": "manuell",
+        "player": "Dartkasse [-] (Abschlussfeier 1. und 2. Mannschaft)",
+        "amount": -548.5,
+        "extra": null,
+        "timestamp": "28.11.2026 - 08:19"
       }
     ],
     "actionHistory": {
