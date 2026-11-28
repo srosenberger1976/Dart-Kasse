@@ -1,5 +1,5 @@
 {
-  "metaDatum": "28.11.2026, 00:29:59 Uhr",
+  "metaDatum": "28.11.2026, 01:29:30 Uhr",
   "payload": {
     "players": [
       "Gaul, Jannik",
@@ -9,6 +9,7 @@
       "Tamas, Christian",
       "Naumann, Stefan",
       "Röder, Andreas",
+      "Schüssler, Frank",
       "Paul, Thorsten",
       "Paul, Cedric",
       "Blos, Robin",
@@ -23,22 +24,23 @@
       "Einwurfgeld": 0
     },
     "kassen": {
-      "dart": 863.9000000000001,
-      "heim": 22
+      "dart": 931.7,
+      "heim": 0
     },
     "debts": {
       "Gaul, Jannik": 0,
-      "Rosenberger, Stefan": 0,
-      "Raab, Jens": 0,
-      "Rosenberger, David": 0,
-      "Tamas, Christian": 4,
-      "Naumann, Stefan": 22,
-      "Röder, Andreas": 0,
-      "Paul, Thorsten": 0,
-      "Paul, Cedric": 0,
-      "Blos, Robin": 0,
-      "Hönig, Joachim": 40,
-      "Rüffer, Dustin": 70,
+      "Rosenberger, Stefan": 80,
+      "Raab, Jens": 10,
+      "Rosenberger, David": 10,
+      "Tamas, Christian": 0,
+      "Naumann, Stefan": 16,
+      "Röder, Andreas": 50,
+      "Schüssler, Frank": 0,
+      "Paul, Thorsten": 34,
+      "Paul, Cedric": 52,
+      "Blos, Robin": 48,
+      "Hönig, Joachim": 34,
+      "Rüffer, Dustin": 64,
       "_Gast / Neuer Spieler": 0,
       "Brang, Bernhard": 0
     },
@@ -1579,7 +1581,7 @@
           "Röder, Andreas": {
             "drinks": {},
             "penalties": 0,
-            "absentPenalty": 0,
+            "absentPenalty": 2,
             "isSingleBooked": false
           },
           "Schüssler, Frank": {
@@ -1662,7 +1664,7 @@
           "Röder, Andreas": {
             "drinks": {},
             "penalties": 0,
-            "absentPenalty": 0,
+            "absentPenalty": 2,
             "isSingleBooked": false
           },
           "Schüssler, Frank": {
@@ -1745,7 +1747,7 @@
           "Röder, Andreas": {
             "drinks": {},
             "penalties": 0,
-            "absentPenalty": 0,
+            "absentPenalty": 2,
             "isSingleBooked": false
           },
           "Schüssler, Frank": {
@@ -1828,7 +1830,7 @@
           "Röder, Andreas": {
             "drinks": {},
             "penalties": 0,
-            "absentPenalty": 0,
+            "absentPenalty": 2,
             "isSingleBooked": false
           },
           "Schüssler, Frank": {
@@ -1911,7 +1913,7 @@
           "Röder, Andreas": {
             "drinks": {},
             "penalties": 0,
-            "absentPenalty": 0,
+            "absentPenalty": 2,
             "isSingleBooked": false
           },
           "Schüssler, Frank": {
@@ -3840,295 +3842,6 @@
             "isSingleBooked": false
           },
           "Brang, Bernhard": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 0,
-            "isSingleBooked": false
-          }
-        }
-      },
-      "KW46": {
-        "status": "booked",
-        "entries": {
-          "Gaul, Jannik": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Rosenberger, Stefan": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Raab, Jens": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Rosenberger, David": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Tamas, Christian": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Naumann, Stefan": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Röder, Andreas": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Schüssler, Frank": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Paul, Thorsten": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Paul, Cedric": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Blos, Robin": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Hönig, Joachim": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Rüffer, Dustin": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "_Gast / Neuer Spieler": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 0,
-            "isSingleBooked": false
-          }
-        }
-      },
-      "KW47": {
-        "status": "booked",
-        "entries": {
-          "Gaul, Jannik": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Rosenberger, Stefan": {
-            "drinks": {
-              "Schnäpschen": 1
-            },
-            "penalties": 0.2,
-            "absentPenalty": 0,
-            "isSingleBooked": false
-          },
-          "Raab, Jens": {
-            "drinks": {
-              "Softgetränke": 2
-            },
-            "penalties": 4,
-            "absentPenalty": 0,
-            "isSingleBooked": true
-          },
-          "Rosenberger, David": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Tamas, Christian": {
-            "drinks": {
-              "Biere": 3
-            },
-            "penalties": 2,
-            "absentPenalty": 0,
-            "isSingleBooked": true
-          },
-          "Naumann, Stefan": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Röder, Andreas": {
-            "drinks": {
-              "Biere": 2
-            },
-            "penalties": 2,
-            "absentPenalty": 0,
-            "isSingleBooked": true
-          },
-          "Schüssler, Frank": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Paul, Thorsten": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Paul, Cedric": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Blos, Robin": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Hönig, Joachim": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Rüffer, Dustin": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "_Gast / Neuer Spieler": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 0,
-            "isSingleBooked": false
-          },
-          "Prang, Bernhard": {
-            "drinks": {
-              "Biere": 4
-            },
-            "penalties": 2,
-            "absentPenalty": 0,
-            "isSingleBooked": true
-          }
-        }
-      },
-      "KW48": {
-        "status": "booked",
-        "entries": {
-          "Gaul, Jannik": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Rosenberger, Stefan": {
-            "drinks": {
-              "Einwurfgeld": 1
-            },
-            "penalties": 0,
-            "absentPenalty": 0,
-            "isSingleBooked": false
-          },
-          "Raab, Jens": {
-            "drinks": {
-              "Einwurfgeld": 1
-            },
-            "penalties": 0,
-            "absentPenalty": 0,
-            "isSingleBooked": false
-          },
-          "Rosenberger, David": {
-            "drinks": {
-              "Einwurfgeld": 1
-            },
-            "penalties": 0,
-            "absentPenalty": 0,
-            "isSingleBooked": false
-          },
-          "Tamas, Christian": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Naumann, Stefan": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Röder, Andreas": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Schüssler, Frank": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Paul, Thorsten": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Paul, Cedric": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Blos, Robin": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Hönig, Joachim": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "Rüffer, Dustin": {
-            "drinks": {},
-            "penalties": 0,
-            "absentPenalty": 2,
-            "isSingleBooked": false
-          },
-          "_Gast / Neuer Spieler": {
             "drinks": {},
             "penalties": 0,
             "absentPenalty": 0,
@@ -9376,345 +9089,6 @@
         "amount": -80,
         "extra": null,
         "timestamp": "15.11.2026 - 00:29"
-      },
-      {
-        "type": "trainingsabrechnung",
-        "player": "Tamas, Christian",
-        "amount": 8,
-        "extra": {
-          "kwKey": "KW47",
-          "drinkCost": 6,
-          "fineCost": 2
-        },
-        "timestamp": "18.11.2026 - 21:05"
-      },
-      {
-        "type": "trainingsabrechnung",
-        "player": "Röder, Andreas",
-        "amount": 6,
-        "extra": {
-          "kwKey": "KW47",
-          "drinkCost": 4,
-          "fineCost": 2
-        },
-        "timestamp": "18.11.2026 - 21:05"
-      },
-      {
-        "type": "trainingsabrechnung",
-        "player": "Prang, Bernhard",
-        "amount": 10,
-        "extra": {
-          "kwKey": "KW47",
-          "drinkCost": 8,
-          "fineCost": 2
-        },
-        "timestamp": "18.11.2026 - 21:06"
-      },
-      {
-        "type": "trainingsabrechnung",
-        "player": "Raab, Jens",
-        "amount": 7,
-        "extra": {
-          "kwKey": "KW47",
-          "drinkCost": 3,
-          "fineCost": 4
-        },
-        "timestamp": "18.11.2026 - 21:07"
-      },
-      {
-        "type": "kw_gesamtabrechnung",
-        "player": "KW47",
-        "amount": 0,
-        "extra": {
-          "spielerListe": [
-            {
-              "player": "Gaul, Jannik",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Rosenberger, Stefan",
-              "dc": 1,
-              "df": 0.2
-            },
-            {
-              "player": "Rosenberger, David",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Naumann, Stefan",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Schüssler, Frank",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Paul, Thorsten",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Paul, Cedric",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Blos, Robin",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Hönig, Joachim",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Rüffer, Dustin",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "_Gast / Neuer Spieler",
-              "dc": 0,
-              "df": 0
-            }
-          ]
-        },
-        "timestamp": "18.11.2026 - 21:07"
-      },
-      {
-        "type": "kw_gesamtabrechnung",
-        "player": "KW46",
-        "amount": 0,
-        "extra": {
-          "spielerListe": [
-            {
-              "player": "Gaul, Jannik",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Rosenberger, Stefan",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Raab, Jens",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Rosenberger, David",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Tamas, Christian",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Naumann, Stefan",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Röder, Andreas",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Schüssler, Frank",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Paul, Thorsten",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Paul, Cedric",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Blos, Robin",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Hönig, Joachim",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Rüffer, Dustin",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "_Gast / Neuer Spieler",
-              "dc": 0,
-              "df": 0
-            }
-          ]
-        },
-        "timestamp": "27.11.2026 - 13:46"
-      },
-      {
-        "type": "kw_gesamtabrechnung",
-        "player": "KW48",
-        "amount": 0,
-        "extra": {
-          "spielerListe": [
-            {
-              "player": "Gaul, Jannik",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Rosenberger, Stefan",
-              "dc": 0,
-              "df": 0
-            },
-            {
-              "player": "Raab, Jens",
-              "dc": 0,
-              "df": 0
-            },
-            {
-              "player": "Rosenberger, David",
-              "dc": 0,
-              "df": 0
-            },
-            {
-              "player": "Tamas, Christian",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Naumann, Stefan",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Röder, Andreas",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Schüssler, Frank",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Paul, Thorsten",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Paul, Cedric",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Blos, Robin",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Hönig, Joachim",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "Rüffer, Dustin",
-              "dc": 0,
-              "df": 2
-            },
-            {
-              "player": "_Gast / Neuer Spieler",
-              "dc": 0,
-              "df": 0
-            }
-          ]
-        },
-        "timestamp": "27.11.2026 - 13:47"
-      },
-      {
-        "type": "loeschen",
-        "player": "Schüssler, Frank",
-        "amount": 6,
-        "extra": null,
-        "timestamp": "27.11.2026 - 13:47"
-      },
-      {
-        "type": "bezahlen",
-        "player": "Röder, Andreas",
-        "amount": 2,
-        "extra": null,
-        "timestamp": "27.11.2026 - 13:48"
-      },
-      {
-        "type": "bezahlen",
-        "player": "Röder, Andreas",
-        "amount": 2,
-        "extra": null,
-        "timestamp": "27.11.2026 - 13:48"
-      },
-      {
-        "type": "bezahlen",
-        "player": "Röder, Andreas",
-        "amount": 2,
-        "extra": null,
-        "timestamp": "27.11.2026 - 13:49"
-      },
-      {
-        "type": "bezahlen",
-        "player": "Röder, Andreas",
-        "amount": 2,
-        "extra": null,
-        "timestamp": "27.11.2026 - 13:49"
-      },
-      {
-        "type": "bezahlen",
-        "player": "Röder, Andreas",
-        "amount": 2,
-        "extra": null,
-        "timestamp": "27.11.2026 - 13:49"
-      },
-      {
-        "type": "loeschen",
-        "player": "Rosenberger, Stefan",
-        "amount": 15.2,
-        "extra": null,
-        "timestamp": "27.11.2026 - 13:49"
-      },
-      {
-        "type": "loeschen",
-        "player": "Rosenberger, David",
-        "amount": 14,
-        "extra": null,
-        "timestamp": "27.11.2026 - 13:49"
-      },
-      {
-        "type": "manuell",
-        "player": "Dartkasse [-] (Aufstieg in Sterbfritz)",
-        "amount": -62,
-        "extra": null,
-        "timestamp": "27.11.2026 - 16:16"
-      },
-      {
-        "type": "manuell",
-        "player": "Dartkasse [-] (Automat November)",
-        "amount": -80,
-        "extra": null,
-        "timestamp": "28.11.2026 - 00:29"
       }
     ],
     "actionHistory": {
@@ -9753,40 +9127,12 @@
           "data": "Einwurfgeld",
           "oldAbsentPenalty": 2,
           "qty": 1
-        },
-        {
-          "type": "fine",
-          "data": 0.1,
-          "oldAbsentPenalty": 2
-        },
-        {
-          "type": "fine",
-          "data": 0.1,
-          "oldAbsentPenalty": 0
-        },
-        {
-          "type": "drink",
-          "data": "Schnäpschen",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Einwurfgeld",
-          "oldAbsentPenalty": 2,
-          "qty": 1
         }
       ],
       "Rosenberger, David": [
         {
           "type": "drink",
           "data": "Weizenbiere",
-          "oldAbsentPenalty": 2,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Einwurfgeld",
           "oldAbsentPenalty": 2,
           "qty": 1
         },
@@ -9897,23 +9243,6 @@
           "data": "Einwurfgeld",
           "oldAbsentPenalty": 2,
           "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 2,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "fine",
-          "data": 2,
-          "oldAbsentPenalty": 0
         }
       ],
       "Tamas, Christian": [
@@ -9934,29 +9263,6 @@
           "data": "Einwurfgeld",
           "oldAbsentPenalty": 2,
           "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 2,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "fine",
-          "data": 2,
-          "oldAbsentPenalty": 0
         }
       ],
       "Raab, Jens": [
@@ -9989,80 +9295,17 @@
           "data": "Einwurfgeld",
           "oldAbsentPenalty": 2,
           "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Softgetränke",
-          "oldAbsentPenalty": 2,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Softgetränke",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "fine",
-          "data": 2,
-          "oldAbsentPenalty": 0
-        },
-        {
-          "type": "fine",
-          "data": 2,
-          "oldAbsentPenalty": 0
-        },
-        {
-          "type": "drink",
-          "data": "Einwurfgeld",
-          "oldAbsentPenalty": 2,
-          "qty": 1
-        }
-      ],
-      "Prang, Bernhard": [
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "drink",
-          "data": "Biere",
-          "oldAbsentPenalty": 0,
-          "qty": 1
-        },
-        {
-          "type": "fine",
-          "data": 2,
-          "oldAbsentPenalty": 0
         }
       ]
     },
     "lastPayments": {
-      "Rosenberger, Stefan": 68,
+      "Rosenberger, Stefan": 0,
       "Rosenberger, David": 72,
-      "Raab, Jens": 2,
+      "Raab, Jens": 8,
       "Naumann, Stefan": 10,
       "Schüssler, Frank": 20,
       "Tamas, Christian": 24,
-      "Gaul, Jannik": 6,
-      "Paul, Thorsten": 40,
-      "Paul, Cedric": 58,
-      "Blos, Robin": 54,
-      "Röder, Andreas": 44
+      "Gaul, Jannik": 24
     },
     "guestFlags": {
       "Brang, Bernhard": true
